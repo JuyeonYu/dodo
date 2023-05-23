@@ -1,3 +1,6 @@
+import 'package:dodo/common/const/colors.dart';
+import 'package:dodo/common/const/data.dart';
+import 'package:dodo/common/util/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -33,7 +36,7 @@ class _TodoScreenState extends State<TodoScreen> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
+      stream: firestore
           .collection('todo')
           .where('userId', isEqualTo: 'remake382')
           .where('isMine', isEqualTo: widget.isMine)
@@ -44,11 +47,12 @@ class _TodoScreenState extends State<TodoScreen> {
             child: CircularProgressIndicator(),
           );
         }
-
         List<Todo> todoList = [];
+
         snapshot.data!.docs.forEach((doc) {
           Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
           Todo todo = Todo.fromJson(data);
+          todo.id = doc.id;
           todoList.add(todo);
         });
 
@@ -57,12 +61,25 @@ class _TodoScreenState extends State<TodoScreen> {
           itemBuilder: (context, index) {
             Todo todo = todoList[index];
             return ListTile(
+              selected: todo.isDone,
+              selectedColor: BODY_TEXT_COLOR,
+              selectedTileColor: Colors.black26,
+              onTap: () {
+
+                setState(() {
+
+                  // todo.isDone = !todo.isDone;
+                });
+              },
+              leading: Container(color: hexToColor(todo.colorCode), child: SizedBox(width: 10, height: 500,)),
+
               title: Text(todo.title),
-              subtitle: Text(todo.section),
               trailing: Checkbox(
-                value: todo.isMine,
+                value: todo.isDone,
                 onChanged: (value) {
-                  // 체크박스 상태 변경 로직 작성
+                  firestore.collection('todo').doc(todo.id).update({
+                    'isDone': !todo.isDone
+                  });
                 },
               ),
             );
