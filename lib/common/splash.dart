@@ -1,9 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:dodo/common/default_layout.dart';
 import 'package:dodo/common/screen/root_tab.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../user/root_screen.dart';
+import '../user/login_screen.dart';
 import 'const/colors.dart';
 import 'const/data.dart';
 
@@ -27,15 +26,20 @@ class _SplashViewState extends State<SplashView> {
   }
 
   void checkToken() async {
-    // Navigator.of(context).pushAndRemoveUntil(
-    //   MaterialPageRoute(builder: (_) => RootTab()),
-    //       (route) => false,
-    // );
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user == null) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => LoginScreen()),
+              (route) => false,
+        );
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => RootTab()),
+              (route) => false,
+        );
+      }
+    });
 
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => LoginScreen()),
-          (route) => false,
-    );
   }
 
   @override
