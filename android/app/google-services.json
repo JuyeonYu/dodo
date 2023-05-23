@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "873377705460",
+    "project_id": "couple-todo-a5771",
+    "storage_bucket": "couple-todo-a5771.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:873377705460:android:4a12acb2ad169e723c5da1",
+        "android_client_info": {
+          "package_name": "com.example.dodo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "873377705460-ncv151bt1tg91adm7h55nk4u72646lfh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYW-hRDXMi3amL9cd-k0IEtVfXu-jVETo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "873377705460-ncv151bt1tg91adm7h55nk4u72646lfh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "873377705460-l673dhcccf786e8hpt6j456paee4e3b9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.johnny.couple-todo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
