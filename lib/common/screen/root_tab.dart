@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../todo/todo_tab_screen.dart';
 import '../const/colors.dart';
 import '../default_layout.dart';
 
@@ -58,7 +59,10 @@ class _RootTabState extends State<RootTab>
         child: TabBarView(
           physics: NeverScrollableScrollPhysics(),
           controller: controller,
-          children: [],
+          children: [
+            TodoTabScreen(),
+            TodoTabScreen()
+          ],
         ),
         bottomNavigationBar: BottomNavigationBar(
           selectedItemColor: PRIMARY_COLOR,
@@ -71,7 +75,7 @@ class _RootTabState extends State<RootTab>
           },
           currentIndex: index,
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.map), label: '지도'),
+            BottomNavigationBarItem(icon: Icon(Icons.task), label: '할일'),
             BottomNavigationBarItem(icon: Icon(Icons.post_add), label: '게시판'),
           ],
         ));

@@ -9,6 +9,7 @@ class DefaultLayout extends StatelessWidget {
   final FloatingActionButton? floatingActionButton;
   final List<Widget>? actions;
   final Widget? leading;
+  final PreferredSizeWidget? bottom;
 
   const DefaultLayout({
     required this.child,
@@ -18,6 +19,7 @@ class DefaultLayout extends StatelessWidget {
     this.floatingActionButton,
     this.actions,
     this.leading,
+    this.bottom,
     Key? key,
   }) : super(key: key);
 
@@ -47,6 +49,7 @@ class DefaultLayout extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
+        bottom: bottom,
         foregroundColor: Colors.black,
       );
     }
