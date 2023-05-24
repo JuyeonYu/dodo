@@ -1,6 +1,5 @@
 import 'package:dodo/common/const/colors.dart';
 import 'package:dodo/common/const/data.dart';
-import 'package:dodo/common/util/helper.dart';
 import 'package:dodo/todo/create_todo.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -113,6 +112,7 @@ class _TodoScreenState extends State<TodoScreen> {
                 selectedColor: BODY_TEXT_COLOR,
                 selectedTileColor: Colors.white10,
                 onTap: () {
+                  if (todo.isDone) { return; }
                   Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTodo(todo: todo,)));
                   // setState(() {
                   //

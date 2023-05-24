@@ -34,10 +34,6 @@ class _CreateTodoState extends State<CreateTodo> {
       _isSaving = true;
     });
 
-
-    // Simulate a delay of 2 seconds for saving the todo
-    await Future.delayed(Duration(seconds: 2));
-
     if (_isEditing) {
       firestore.collection('todo').doc(widget.todo.id).update(widget.todo.toJson());
     } else {
@@ -166,11 +162,7 @@ class _CreateTodoState extends State<CreateTodo> {
                   setState(() {
                     _isDeleting = true;
                   });
-
-
-                  // Simulate a delay of 2 seconds for saving the todo
-                  await Future.delayed(Duration(seconds: 2));
-
+                  
                   firestore.collection('todo').doc(widget.todo.id).delete();
                   setState(() {
                     _isDeleting = false;
