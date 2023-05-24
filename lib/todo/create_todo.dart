@@ -18,18 +18,31 @@ class CreateTodo extends StatefulWidget {
 }
 
 class _CreateTodoState extends State<CreateTodo> {
+  late bool _isEditing;
   bool _isSaving = false;
+  bool _isDeleting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isEditing = widget.todo.title.isNotEmpty;
+  }
+
 
   Future<void> _saveTodo() async {
     setState(() {
       _isSaving = true;
     });
 
+
     // Simulate a delay of 2 seconds for saving the todo
     await Future.delayed(Duration(seconds: 2));
 
-    // Save the todo to Firestore or perform any other necessary actions
-    firestore.collection('todo').doc().set(widget.todo.toJson());
+    if (_isEditing) {
+      firestore.collection('todo').doc(widget.todo.id).update(widget.todo.toJson());
+    } else {
+      firestore.collection('todo').doc().set(widget.todo.toJson());
+    }
 
     setState(() {
       _isSaving = false;
@@ -43,19 +56,17 @@ class _CreateTodoState extends State<CreateTodo> {
   Widget build(BuildContext context) {
 
     return DefaultLayout(
-        title: '할 일 등록',
+        title: _isEditing ? '할 일 편집' : '할 일 등록',
         actions: [
           TextButton(
               onPressed: ()  {
                 if (widget.todo!.title.isEmpty) {
                   return;
                 }
-                print(widget.todo.toJson());
-                // firestore.doc('todo').set(widget.todo.toJson());
                 _saveTodo();
               },
               child: _isSaving ? CircularProgressIndicator() : Text(
-                '작성',
+                _isEditing ? '수정' : '작성',
                 style: TextStyle(color: widget.todo!.title.isEmpty ? Colors.grey : PRIMARY_COLOR),
               ))
         ],
@@ -69,7 +80,7 @@ class _CreateTodoState extends State<CreateTodo> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      CustomTextFormField(hintText: '제목', onChanged: (String value) {
+                      CustomTextFormField(initialValue: widget.todo.title, hintText: '제목', onChanged: (String value) {
                         setState(() {
                           widget.todo!.title = value;
                         });
@@ -146,6 +157,26 @@ class _CreateTodoState extends State<CreateTodo> {
             Row(
               children: [
                 IconButton(onPressed: (){}, icon: Icon(Icons.info)),
+                Spacer(),
+                _isDeleting ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(),
+                ) :
+                IconButton(onPressed: () async {
+                  setState(() {
+                    _isDeleting = true;
+                  });
+
+
+                  // Simulate a delay of 2 seconds for saving the todo
+                  await Future.delayed(Duration(seconds: 2));
+
+                  firestore.collection('todo').doc(widget.todo.id).delete();
+                  setState(() {
+                    _isDeleting = false;
+                  });
+                  Navigator.pop(context);
+                }, icon: Icon(Icons.delete, color: Colors.redAccent,))
               ],
             )
           ],

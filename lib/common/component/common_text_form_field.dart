@@ -5,6 +5,7 @@ import '../const/colors.dart';
 class CustomTextFormField extends StatelessWidget {
   final String? hintText;
   final String? errorText;
+  final String? initialValue;
   final bool obscureText;
   final bool autofocus;
   final ValueChanged<String>? onChanged;
@@ -18,9 +19,11 @@ class CustomTextFormField extends StatelessWidget {
     this.autofocus = false,
     this.hintText,
     this.errorText,
+    this.initialValue,
     this.backgroundColor,
     this.borderColor,
     this.contentPadding,
+
     Key? key,
   }) : super(key: key);
 
@@ -29,6 +32,7 @@ class CustomTextFormField extends StatelessWidget {
     final baseBorder = OutlineInputBorder(
         borderSide: BorderSide(color: borderColor ?? INPUT_BORDER_COLOR, width: 1.0));
     return TextFormField(
+      initialValue: initialValue,
       cursorColor: PRIMARY_COLOR,
       obscureText: obscureText,
       autofocus: autofocus,
