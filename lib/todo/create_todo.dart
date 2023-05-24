@@ -21,6 +21,7 @@ class _CreateTodoState extends State<CreateTodo> {
   late bool _isEditing;
   bool _isSaving = false;
   bool _isDeleting = false;
+  late final TextEditingController _memoController = TextEditingController(text: widget.todo.content);
 
   @override
   void initState() {
@@ -130,6 +131,7 @@ class _CreateTodoState extends State<CreateTodo> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: TextField(
+                        controller: _memoController,
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: '메모',

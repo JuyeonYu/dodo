@@ -8,6 +8,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? initialValue;
   final bool obscureText;
   final bool autofocus;
+  final bool showCursorColor;
   final ValueChanged<String>? onChanged;
   final Color? backgroundColor;
   final Color? borderColor;
@@ -17,6 +18,7 @@ class CustomTextFormField extends StatelessWidget {
     required this.onChanged,
     this.obscureText = false,
     this.autofocus = false,
+    this.showCursorColor = true,
     this.hintText,
     this.errorText,
     this.initialValue,
@@ -33,7 +35,7 @@ class CustomTextFormField extends StatelessWidget {
         borderSide: BorderSide(color: borderColor ?? INPUT_BORDER_COLOR, width: 1.0));
     return TextFormField(
       initialValue: initialValue,
-      cursorColor: PRIMARY_COLOR,
+      cursorColor: showCursorColor ? PRIMARY_COLOR : Colors.transparent,
       obscureText: obscureText,
       autofocus: autofocus,
       onChanged: onChanged,
@@ -48,7 +50,7 @@ class CustomTextFormField extends StatelessWidget {
           enabledBorder: baseBorder,
           focusedBorder: baseBorder.copyWith(
               borderSide:
-              baseBorder.borderSide.copyWith(color: PRIMARY_COLOR))),
+              baseBorder.borderSide.copyWith(color: showCursorColor ? PRIMARY_COLOR : Colors.transparent))),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dodo/todo/create_todo.dart';
+import 'package:dodo/todo/search_todo.dart';
 import 'package:flutter/material.dart';
 
 import '../../todo/model/todo.dart';
@@ -47,8 +48,8 @@ class _RootTabState extends State<RootTab>
         title: 'lapine',
         actions: [
           IconButton(onPressed: () {
-            // Navigator.of(context).push(
-            //     MaterialPageRoute(builder: (_) => SearchScreen()));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => Searchtodo()));
           }, icon: Icon(Icons.search)),
           IconButton(onPressed: () {}, icon: Icon(Icons.notifications)),
         ],

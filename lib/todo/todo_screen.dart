@@ -82,65 +82,26 @@ class _TodoScreenState extends State<TodoScreen> {
             Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
             Todo todo = Todo.fromJson(data);
             todo.id = doc.id;
-            return Dismissible(
-              background: Container(
-                color: Colors.red,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text('to you'),
-                  ),
-                ),
-              ),
-              secondaryBackground: Container(
-                color: Colors.green,
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Icon(
-                      Icons.check,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              key: Key(todo.id ?? ""),
-              child: ListTile(
-                selected: todo.isDone,
-                selectedColor: BODY_TEXT_COLOR,
-                selectedTileColor: Colors.white10,
-                onTap: () {
-                  if (todo.isDone) { return; }
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTodo(todo: todo,)));
-                  // setState(() {
-                  //
-                  //   // todo.isDone = !todo.isDone;
-                  // });
-                },
-                leading: Container(color: labelColors[todo.type], child: SizedBox(width: 10, height: 500,)),
-
-                title: Text(todo.title),
-                trailing: Checkbox(
-                  value: todo.isDone,
-                  onChanged: (value) {
-                    firestore.collection('todo').doc(todo.id).update({
-                      'isDone': !todo.isDone
-                    });
-                  },
-                ),
-              ),
-              onDismissed: (direction) {
-                if (direction == DismissDirection.startToEnd) {
-                  // 좌측에서 우측으로 스와이프됨 (삭제 액션)
-                  // _deleteTodoItem(todo);
-                } else if (direction == DismissDirection.endToStart) {
-                  // 우측에서 좌측으로 스와이프됨 (완료 액션)
-                  // _completeTodoItem(todo);
-                }
+            return ListTile(
+              selected: todo.isDone,
+              selectedColor: BODY_TEXT_COLOR,
+              selectedTileColor: Colors.white10,
+              onTap: () {
+                if (todo.isDone) { return; }
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTodo(todo: todo,)));
               },
+              leading: Container(color: labelColors[todo.type], child: SizedBox(width: 10, height: 500,)),
 
+              title: Text(todo.title),
+              trailing: Checkbox(
+                value: todo.isDone,
+                onChanged: (value) {
+                  firestore.collection('todo').doc(todo.id).update({
+                    'isDone': !todo.isDone,
+                    'timestamp': Timestamp.now()
+                  });
+                },
+              ),
             );
           },
         ),
