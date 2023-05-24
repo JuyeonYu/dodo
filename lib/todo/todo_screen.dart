@@ -1,6 +1,7 @@
 import 'package:dodo/common/const/colors.dart';
 import 'package:dodo/common/const/data.dart';
 import 'package:dodo/common/util/helper.dart';
+import 'package:dodo/todo/create_todo.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -69,6 +70,10 @@ class _TodoScreenState extends State<TodoScreen> {
             ),
           ),
         ),
+        sectionName == 'Pending' && todos.isEmpty ? Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('할 일이 없는 날입니다. 사랑한다고 말해볼까요?'),
+        ) :
         ListView.builder(
           shrinkWrap: true,
           physics: ClampingScrollPhysics(),
@@ -108,13 +113,13 @@ class _TodoScreenState extends State<TodoScreen> {
                 selectedColor: BODY_TEXT_COLOR,
                 selectedTileColor: Colors.white10,
                 onTap: () {
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTodo(todo: todo,)));
                   // setState(() {
                   //
                   //   // todo.isDone = !todo.isDone;
                   // });
                 },
-                leading: Container(color: hexToColor(todo.colorCode), child: SizedBox(width: 10, height: 500,)),
+                leading: Container(color: labelColors[todo.type], child: SizedBox(width: 10, height: 500,)),
 
                 title: Text(todo.title),
                 trailing: Checkbox(

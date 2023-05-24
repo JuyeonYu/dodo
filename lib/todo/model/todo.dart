@@ -4,20 +4,20 @@ class Todo {
   String? id;
   String userId;
   String title;
+  String content;
   bool isMine;
   bool isDone;
-  String section;
-  String colorCode;
+  int type;
   Timestamp timestamp;
 
   Todo({
     this.id,
     required this.userId,
     required this.title,
+    required this.content,
     required this.isMine,
     required this.isDone,
-    required this.section,
-    required this.colorCode,
+    required this.type,
     required this.timestamp,
   });
 
@@ -25,10 +25,10 @@ class Todo {
     return Todo(
       userId: json['userId'],
       title: json['title'],
+      content: json['content'],
       isMine: json['isMine'],
       isDone: json['isDone'],
-      section: json['section'],
-      colorCode: json['colorCode'],
+      type: json['type'],
       timestamp: json['timestamp'],
     );
   }
@@ -38,11 +38,10 @@ class Todo {
       'id': id,
       'userId': userId,
       'title': title,
+      'content': content,
       'isMine': isMine,
       'isDone': isDone,
-
-      'section': section,
-      'colorCode': colorCode,
+      'type': type,
       'timestamp': timestamp
     };
   }

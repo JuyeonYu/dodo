@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dodo/todo/create_todo.dart';
 import 'package:flutter/material.dart';
 
+import '../../todo/model/todo.dart';
 import '../../todo/todo_tab_screen.dart';
 import '../const/colors.dart';
 import '../default_layout.dart';
@@ -15,6 +18,7 @@ class _RootTabState extends State<RootTab>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   late TabController controller;
   int index = 0;
+  int? _value = 1;
 
   @override
   bool get wantKeepAlive => true;
@@ -51,8 +55,17 @@ class _RootTabState extends State<RootTab>
         floatingActionButton: FloatingActionButton(
           backgroundColor: PRIMARY_COLOR,
           onPressed: () {
-            // Navigator.of(context)
-            //     .push(MaterialPageRoute(builder: (_) => CreatePostScreen())).then((value) => setState(() {}));
+            Navigator.push(
+              context, MaterialPageRoute(builder: (context) => CreateTodo(todo: Todo(
+              userId: 'remake382',
+              title: '',
+              isMine: true,
+              isDone: false,
+              type: 0,
+              timestamp: Timestamp.now(),
+              content: '',
+            ),)),
+            );
           },
           child: Icon(Icons.add),
         ),
