@@ -33,6 +33,7 @@ class DefaultLayout extends StatelessWidget {
       floatingActionButton: floatingActionButton,
     );
   }
+
   AppBar? renderAppBar() {
     if (title == null) {
       return null;

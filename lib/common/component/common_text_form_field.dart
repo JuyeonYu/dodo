@@ -25,14 +25,14 @@ class CustomTextFormField extends StatelessWidget {
     this.backgroundColor,
     this.borderColor,
     this.contentPadding,
-
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final baseBorder = OutlineInputBorder(
-        borderSide: BorderSide(color: borderColor ?? INPUT_BORDER_COLOR, width: 1.0));
+        borderSide:
+            BorderSide(color: borderColor ?? INPUT_BORDER_COLOR, width: 1.0));
     return TextFormField(
       initialValue: initialValue,
       cursorColor: showCursorColor ? PRIMARY_COLOR : Colors.transparent,
@@ -49,8 +49,9 @@ class CustomTextFormField extends StatelessWidget {
           border: baseBorder,
           enabledBorder: baseBorder,
           focusedBorder: baseBorder.copyWith(
-              borderSide:
-              baseBorder.borderSide.copyWith(color: showCursorColor ? PRIMARY_COLOR : Colors.transparent))),
+              borderSide: baseBorder.borderSide.copyWith(
+                  color:
+                      showCursorColor ? PRIMARY_COLOR : Colors.transparent))),
     );
   }
 }

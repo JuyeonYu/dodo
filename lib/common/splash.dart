@@ -30,16 +30,15 @@ class _SplashViewState extends State<SplashView> {
       if (user == null) {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => LoginScreen()),
-              (route) => false,
+          (route) => false,
         );
       } else {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => RootTab()),
-              (route) => false,
+          (route) => false,
         );
       }
     });
-
   }
 
   @override

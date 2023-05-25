@@ -10,9 +10,9 @@ class TodoTabScreen extends StatefulWidget {
   State<TodoTabScreen> createState() => _TodoTabScreenState();
 }
 
-class _TodoTabScreenState extends State<TodoTabScreen> with TickerProviderStateMixin {
+class _TodoTabScreenState extends State<TodoTabScreen>
+    with TickerProviderStateMixin {
   TabController? _tabController;
-
 
   @override
   void initState() {
@@ -29,46 +29,51 @@ class _TodoTabScreenState extends State<TodoTabScreen> with TickerProviderStateM
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(52),
-        child: AppBar(bottom: PreferredSize(
-          preferredSize: Size.fromHeight(0),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TabBar(
-                labelColor: BODY_TEXT_COLOR,
-                  indicatorColor: BODY_TEXT_COLOR,
-                  isScrollable: true,
-                  tabs: [
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Text("Mine"),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Text("Yours"),
-                    ),
-                  ], controller: _tabController),
+        child: AppBar(
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TabBar(
+                    labelColor: BODY_TEXT_COLOR,
+                    indicatorColor: BODY_TEXT_COLOR,
+                    isScrollable: true,
+                    tabs: [
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text("Mine"),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text("Yours"),
+                      ),
+                    ],
+                    controller: _tabController),
+              ),
             ),
           ),
-        ), backgroundColor: Colors.white, elevation: 0,),
+          backgroundColor: Colors.white,
+          elevation: 0,
+        ),
       ),
-
       body: TabBarView(
-      controller: _tabController,
-      children: <Widget>[
-        TodoScreen(isMine: true,),
-        TodoScreen(isMine: false,),
-      ],
-
-    ),);
+        controller: _tabController,
+        children: <Widget>[
+          TodoScreen(
+            isMine: true,
+          ),
+          TodoScreen(
+            isMine: false,
+          ),
+        ],
+      ),
+    );
   }
 }
-

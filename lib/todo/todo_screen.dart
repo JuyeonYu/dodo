@@ -3,8 +3,6 @@ import 'package:dodo/common/const/data.dart';
 import 'package:dodo/todo/create_todo.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
 import 'component/helper.dart';
 import 'model/todo.dart';
 
@@ -15,8 +13,6 @@ class TodoScreen extends StatefulWidget {
 
   @override
   State<TodoScreen> createState() => _TodoScreenState();
-
-
 }
 
 class _TodoScreenState extends State<TodoScreen> {
@@ -81,6 +77,7 @@ class _TodoScreenState extends State<TodoScreen> {
       },
     );
   }
+
   Widget _buildSection(String sectionName, List<DocumentSnapshot> todos) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,50 +93,65 @@ class _TodoScreenState extends State<TodoScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
-              sectionName == 'Pending' ? Spacer() :
-
-              Tooltip(message: '완료 시점 기준 내일 자동으로 사라집니다.',  triggerMode: TooltipTriggerMode.tap,child: Icon(Icons.info),
-              )
+              sectionName == 'Pending'
+                  ? Spacer()
+                  : Tooltip(
+                      message: '완료 시점 기준 내일 자동으로 사라집니다.',
+                      triggerMode: TooltipTriggerMode.tap,
+                      child: Icon(Icons.info),
+                    )
             ],
           ),
         ),
-        sectionName == 'Pending' && todos.isEmpty ? Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('할 일이 없는 날입니다. 사랑한다고 말해볼까요?'),
-        ) :
-        ListView.builder(
-          shrinkWrap: true,
-          physics: ClampingScrollPhysics(),
-          itemCount: todos.length,
-          itemBuilder: (context, index) {
-            DocumentSnapshot doc = todos[index];
-            Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-            Todo todo = Todo.fromJson(data);
-            todo.id = doc.id;
-            return ListTile(
-              selected: todo.isDone,
-              selectedColor: BODY_TEXT_COLOR,
-              selectedTileColor: Colors.white10,
-              onTap: () {
-                if (todo.isDone) { return; }
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTodo(todo: todo,)));
-              },
-              leading: Container(color: labelColors[todo.type], child: SizedBox(width: 10, height: 500,)),
-
-              title: Text(todo.title),
-              trailing: Checkbox(
-                value: todo.isDone,
-                onChanged: (value) {
-                  firestore.collection('todo').doc(todo.id).update({
-                    'isDone': !todo.isDone,
-                    'timestamp': Timestamp.now()
-                  });
+        sectionName == 'Pending' && todos.isEmpty
+            ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('할 일이 없는 날입니다. 사랑한다고 말해볼까요?'),
+              )
+            : ListView.builder(
+                shrinkWrap: true,
+                physics: ClampingScrollPhysics(),
+                itemCount: todos.length,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot doc = todos[index];
+                  Map<String, dynamic> data =
+                      doc.data() as Map<String, dynamic>;
+                  Todo todo = Todo.fromJson(data);
+                  todo.id = doc.id;
+                  return ListTile(
+                    selected: todo.isDone,
+                    selectedColor: BODY_TEXT_COLOR,
+                    selectedTileColor: Colors.white10,
+                    onTap: () {
+                      if (todo.isDone) {
+                        return;
+                      }
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CreateTodo(
+                                    todo: todo,
+                                  )));
+                    },
+                    leading: Container(
+                        color: labelColors[todo.type],
+                        child: SizedBox(
+                          width: 10,
+                          height: 500,
+                        )),
+                    title: Text(todo.title),
+                    trailing: Checkbox(
+                      value: todo.isDone,
+                      onChanged: (value) {
+                        firestore.collection('todo').doc(todo.id).update({
+                          'isDone': !todo.isDone,
+                          'timestamp': Timestamp.now()
+                        });
+                      },
+                    ),
+                  );
                 },
               ),
-            );
-          },
-        ),
       ],
     );
   }

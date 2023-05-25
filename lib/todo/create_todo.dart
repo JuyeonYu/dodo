@@ -11,6 +11,7 @@ import 'model/todo.dart';
 
 class CreateTodo extends StatefulWidget {
   final Todo todo;
+
   const CreateTodo({Key? key, required this.todo}) : super(key: key);
 
   @override
