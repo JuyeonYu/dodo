@@ -3,7 +3,9 @@ import 'package:dodo/common/const/data.dart';
 import 'package:dodo/todo/create_todo.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
+import 'component/helper.dart';
 import 'model/todo.dart';
 
 class TodoScreen extends StatefulWidget {
@@ -45,11 +47,35 @@ class _TodoScreenState extends State<TodoScreen> {
             pendingTodos.add(doc);
           }
         }
+        pendingTodos.sort((a, b) {
+          // 1차 정렬: type 오름차순
+          Todo aTodo = Todo.fromJson(a.data() as Map<String, dynamic>);
+          Todo bTodo = Todo.fromJson(b.data() as Map<String, dynamic>);
+          int typeComparison = bTodo.type.compareTo(aTodo.type);
+          if (typeComparison != 0) {
+            return typeComparison;
+          }
 
+          // 2차 정렬: timestamp 오름차순
+          return bTodo.timestamp.compareTo(aTodo.timestamp);
+        });
+
+        completedTodos.sort((a, b) {
+          // 1차 정렬: type 오름차순
+          Todo aTodo = Todo.fromJson(a.data() as Map<String, dynamic>);
+          Todo bTodo = Todo.fromJson(b.data() as Map<String, dynamic>);
+          int typeComparison = bTodo.type.compareTo(aTodo.type);
+          if (typeComparison != 0) {
+            return typeComparison;
+          }
+
+          // 2차 정렬: timestamp 오름차순
+          return bTodo.timestamp.compareTo(aTodo.timestamp);
+        });
         return ListView(
           children: [
-            _buildSection('Pending', pendingTodos),
-            _buildSection('Completed', completedTodos),
+            Helper.BuildSection('Pending', pendingTodos),
+            Helper.BuildSection('Completed', completedTodos),
           ],
         );
       },
@@ -61,12 +87,21 @@ class _TodoScreenState extends State<TodoScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(
-            sectionName,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+          child: Row(
+            children: [
+              Text(
+                sectionName,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              sectionName == 'Pending' ? Spacer() :
+
+              Tooltip(message: '완료 시점 기준 내일 자동으로 사라집니다.',  triggerMode: TooltipTriggerMode.tap,child: Icon(Icons.info),
+              )
+            ],
           ),
         ),
         sectionName == 'Pending' && todos.isEmpty ? Padding(

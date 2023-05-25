@@ -42,6 +42,7 @@ dependencies:
   google_sign_in: ^6.1.1
   change_app_package_name: ^1.1.0
   cloud_firestore: ^4.7.1
+  fluttertoast: ^8.2.2
 
 dev_dependencies:
   flutter_test:

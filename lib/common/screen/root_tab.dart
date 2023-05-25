@@ -45,12 +45,8 @@ class _RootTabState extends State<RootTab>
 
   Widget build(BuildContext context) {
     return DefaultLayout(
-        title: 'lapine',
+        title: 'dodo',
         actions: [
-          IconButton(onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => Searchtodo()));
-          }, icon: Icon(Icons.search)),
           IconButton(onPressed: () {}, icon: Icon(Icons.notifications)),
         ],
         floatingActionButton: FloatingActionButton(
