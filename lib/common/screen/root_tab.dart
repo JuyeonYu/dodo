@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dodo/common/const/data.dart';
 import 'package:dodo/todo/create_todo.dart';
 import 'package:dodo/todo/search_todo.dart';
 import 'package:dodo/user/login_screen.dart';
@@ -11,7 +12,12 @@ import '../../todo/todo_tab_screen.dart';
 import '../../user/model/user.dart';
 import '../const/colors.dart';
 import '../default_layout.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../util/helper.dart';
 
 class RootTab extends StatefulWidget {
   const RootTab({Key? key}) : super(key: key);
@@ -127,15 +133,41 @@ class _RootTabState extends State<RootTab>
                       bottomRight: Radius.circular(40.0))),
             ),
             ListTile(
-              leading: Icon(
-                Icons.share,
-                color: Colors.grey[850],
+              title: Text('같이 하는 사람'),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text('초대된 사람이 없습니다.'),
+                  ElevatedButton(
+                      onPressed: () {
+                        String shareCode = generateShortHashFromUUID();
+                        firestore.collection('invitation').doc(UserDomain.myself.email).set({
+                          'code': shareCode,
+                          'hostName': UserDomain.myself.name,
+                          'timestamp': Timestamp.now()
+                        }, SetOptions(merge: true));
+                        showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                  title: Text(shareCode),
+                                  content: const Text('위 코드를 상대방에게 공유하세요.'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Share.share('두두 초대 코드: $shareCode');
+                                      },
+                                      child: const Text('공유'),
+                                    ),
+                                  ]);
+                            });
+                      },
+                      child: Text('초대 코드 생성하기'))
+                ],
               ),
-              title: Text('할 일 공유하기'),
               onTap: () {
                 print('Setting is clicked');
               },
-              trailing: Icon(Icons.add),
             ),
             ListTile(
               leading: Icon(
