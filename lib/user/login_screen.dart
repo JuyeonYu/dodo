@@ -9,6 +9,7 @@ import '../common/component/common_text_form_field.dart';
 import '../common/const/colors.dart';
 import '../common/default_layout.dart';
 import '../common/screen/root_tab.dart';
+import 'model/user.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -56,8 +57,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 32,
               ),
               ElevatedButton(
-                  onPressed: () {
-                    Future<UserCredential> user = signInWithGoogle();
+                  onPressed: () async {
+                    UserCredential userCredential = await signInWithGoogle();
+                    if (userCredential.user?.email != null) {
+                      UserDomain.myself.email = userCredential.user!.email!;
+                    }
+                    if (userCredential.user?.displayName != null) {
+                      UserDomain.myself.name = userCredential.user!.displayName!;
+                    }
+                    if (userCredential.user?.photoURL != null) {
+                      UserDomain.myself.thumbnail = userCredential.user!.photoURL!;
+                    }
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (_) => RootTab()),
+                            (route) => false);
                   },
                   child: Text('login with google')),
               ElevatedButton(

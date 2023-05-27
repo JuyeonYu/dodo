@@ -1,15 +1,24 @@
 import 'package:dodo/common/default_layout.dart';
 import 'package:flutter/material.dart';
 
-class ConfigScreen extends StatelessWidget {
+import '../common/const/data.dart';
+
+
+class ConfigScreen extends StatefulWidget {
   const ConfigScreen({Key? key}) : super(key: key);
 
+  @override
+  State<ConfigScreen> createState() => _ConfigScreenState();
+}
+
+class _ConfigScreenState extends State<ConfigScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
         child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ElevatedButton(onPressed: () {}, child: Image.asset('flower.jpg'))
+
       ],
     ));
   }

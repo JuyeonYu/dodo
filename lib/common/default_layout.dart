@@ -10,6 +10,7 @@ class DefaultLayout extends StatelessWidget {
   final List<Widget>? actions;
   final Widget? leading;
   final PreferredSizeWidget? bottom;
+  final Widget? drawer;
 
   const DefaultLayout({
     required this.child,
@@ -20,6 +21,7 @@ class DefaultLayout extends StatelessWidget {
     this.actions,
     this.leading,
     this.bottom,
+    this.drawer,
     Key? key,
   }) : super(key: key);
 
@@ -31,6 +33,7 @@ class DefaultLayout extends StatelessWidget {
       bottomNavigationBar: bottomNavigationBar,
       body: SafeArea(child: child),
       floatingActionButton: floatingActionButton,
+      drawer: drawer,
     );
   }
 
