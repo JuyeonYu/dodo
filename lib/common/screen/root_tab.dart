@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import '../../todo/model/todo.dart';
 import '../../todo/todo_tab_screen.dart';
 import '../../user/model/user.dart';
+import '../component/text_input_dialog.dart';
 import '../const/colors.dart';
 import '../default_layout.dart';
 import 'package:share_plus/share_plus.dart';
@@ -138,31 +139,154 @@ class _RootTabState extends State<RootTab>
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text('초대된 사람이 없습니다.'),
-                  ElevatedButton(
-                      onPressed: () {
-                        String shareCode = generateShortHashFromUUID();
-                        firestore.collection('invitation').doc(UserDomain.myself.email).set({
-                          'code': shareCode,
-                          'hostName': UserDomain.myself.name,
-                          'timestamp': Timestamp.now()
-                        }, SetOptions(merge: true));
-                        showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                  title: Text(shareCode),
-                                  content: const Text('위 코드를 상대방에게 공유하세요.'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Share.share('두두 초대 코드: $shareCode');
-                                      },
-                                      child: const Text('공유'),
-                                    ),
-                                  ]);
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () {
+                            String shareCode = generateShortHashFromUUID();
+                            firestore
+                                .collection('invitation')
+                                .doc(UserDomain.myself.email)
+                                .set({
+                              'code': shareCode,
+                              'hostName': UserDomain.myself.name,
+                              'timestamp': Timestamp.now()
+                            }, SetOptions(merge: true));
+                            showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                      title: Text(shareCode),
+                                      content: const Text('위 코드를 상대방에게 공유하세요.'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Share.share('두두 초대 코드: $shareCode');
+                                          },
+                                          child: const Text('공유'),
+                                        ),
+                                      ]);
+                                });
+                          },
+                          child: Text('초대하기')),
+                      ElevatedButton(
+                          onPressed: () async {
+                            String? enteredText = await showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return TextInputDialog(
+                                    title: '초대코드',
+                                    hint: '6자리의 초대코드를 입력해주세요',
+                                  );
+                                });
+
+                            if (enteredText == null) {
+                              return;
+                            }
+                            var snapshots = firestore
+                                .collection('invitation')
+                                .where('code', isEqualTo: enteredText)
+                                .snapshots();
+                            snapshots.listen((event) {
+                              if (event.docs.length == 1) {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      String hostName =
+                                          event.docs.first.data()['hostName'];
+                                      String hostEmail =
+                                          event.docs.first.data()['hostEmail'];
+                                      return AlertDialog(
+                                          title: Text('알림'),
+                                          content: Text(
+                                              '초대한 사람의 정보가 맞습니까?\n이름: ${hostName}\nemail: ${hostEmail}'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                          title: Text('알림'),
+                                                          content: const Text(
+                                                              '해당 초대 코드에 문제가 있습니다. 코대 코드 생성을 다시 한번 부탁드립니다.'),
+                                                          actions: <Widget>[
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: const Text(
+                                                                  '닫기'),
+                                                            ),
+                                                          ]);
+                                                    });
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('아니오'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                firestore
+                                                    .collection('host_guest')
+                                                    .doc()
+                                                    .set({
+                                                  'hostEmail': hostEmail,
+                                                  'hostName': hostName,
+                                                  'guestEmail':
+                                                      UserDomain.myself.email,
+                                                  'guestName':
+                                                      UserDomain.myself.name,
+                                                });
+
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('네'),
+                                            ),
+                                          ]);
+                                    });
+                              } else if (event.docs.length > 1) {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                          title: Text('알림'),
+                                          content: const Text(
+                                              '??해당 초대 코드에 문제가 있습니다. 코대 코드 생성을 다시 한번 부탁드립니다.'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('닫기'),
+                                            ),
+                                          ]);
+                                    });
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                          title: Text('없는 초대코드입니다.'),
+                                          // content: const Text('초대한 사람 email: $'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('닫기'),
+                                            ),
+                                          ]);
+                                    });
+                              }
                             });
-                      },
-                      child: Text('초대 코드 생성하기'))
+                          },
+                          child: Text('초대받기')),
+                    ],
+                  )
                 ],
               ),
               onTap: () {
