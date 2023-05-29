@@ -23,13 +23,6 @@ class Helper {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Tooltip(
-                message: sectionName == 'Pending'
-                    ? '할 일은 최대 10개 까지 추가됩니다.\n꼭 필요한 것만 하는 커플이 됩시다! :)'
-                    : '완료 시점 기준 24시간 후에 자동으로 사라집니다.',
-                triggerMode: TooltipTriggerMode.tap,
-                child: Icon(Icons.info),
-              )
             ],
           ),
         ),

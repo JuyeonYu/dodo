@@ -41,8 +41,8 @@ class _TodoTabScreenState extends State<TodoTabScreen>
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TabBar(
-                  labelColor: BODY_TEXT_COLOR,
-                  indicatorColor: BODY_TEXT_COLOR,
+                  labelColor: TEXT_COLOR,
+                  indicatorColor: PRIMARY_COLOR,
                   isScrollable: true,
                   tabs: [
                     Padding(
@@ -51,7 +51,7 @@ class _TodoTabScreenState extends State<TodoTabScreen>
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8),
-                      child: UserDomain.partner == null ? Text('공유한 친구가 없습니다.') : Text(UserDomain.partner!.name),
+                      child: UserDomain.partner == null ? Text('초대된 친구가 없습니다.') : Text(UserDomain.partner!.name),
                     ),
                   ],
                   controller: _tabController),

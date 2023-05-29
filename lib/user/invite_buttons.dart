@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../common/component/text_input_dialog.dart';
+import '../common/const/colors.dart';
 import '../common/const/data.dart';
 import '../common/util/helper.dart';
 import 'model/user.dart';
@@ -24,6 +25,7 @@ class _InviteButtonsState extends State<InviteButtons> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             onPressed: () {
               String shareCode = generateShortHashFromUUID();
               firestore
@@ -48,12 +50,14 @@ class _InviteButtonsState extends State<InviteButtons> {
                               Share.share('두두 초대 코드: $shareCode');
                             },
                             child: const Text('공유'),
+                            style: TextButton.styleFrom(foregroundColor: PRIMARY_COLOR),
                           ),
                         ]);
                   });
             },
             child: Text('초대하기')),
         ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             onPressed: () async {
               String? enteredText = await showDialog<String>(
                   context: context,

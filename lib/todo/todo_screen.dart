@@ -22,15 +22,19 @@ class _TodoScreenState extends State<TodoScreen> {
   @override
   Widget build(BuildContext context) {
     if (!widget.isMine && UserDomain.partner == null) {
-      return Column(mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('초대된 사람이 없습니다.'),
-          SizedBox(width: 100, height: 100, child: Icon(Icons.accessibility)),
-          Padding(
-            padding: const EdgeInsets.all(50.0),
-            child: InviteButtons(),
+      return Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Text('초대된 사람이 없습니다.'),
+              SizedBox(width: 100, height: 100, child: Icon(Icons.accessibility)),
+              Padding(
+                padding: const EdgeInsets.all(50.0),
+                child: InviteButtons(),
+              ),
+            ],
           ),
-        ],
+        ),
       );
     }
     return StreamBuilder<QuerySnapshot>(
@@ -107,13 +111,6 @@ class _TodoScreenState extends State<TodoScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              sectionName == 'Pending'
-                  ? Spacer()
-                  : Tooltip(
-                      message: '완료 시점 기준 내일 자동으로 사라집니다.',
-                      triggerMode: TooltipTriggerMode.tap,
-                      child: Icon(Icons.info),
-                    )
             ],
           ),
         ),
@@ -156,6 +153,7 @@ class _TodoScreenState extends State<TodoScreen> {
                     title: Text(todo.title),
                     trailing: Checkbox(
                       value: todo.isDone,
+                      activeColor: PRIMARY_COLOR,
                       onChanged: (value) {
                         firestore.collection('todo').doc(todo.id).update({
                           'isDone': !todo.isDone,

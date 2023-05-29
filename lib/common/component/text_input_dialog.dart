@@ -1,3 +1,5 @@
+import 'package:dodo/common/component/common_text_form_field.dart';
+import 'package:dodo/common/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class TextInputDialog extends StatefulWidget {
@@ -27,25 +29,31 @@ class _TextInputDialogState extends State<TextInputDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(widget.title),
-      content: TextField(
-        controller: _textEditingController,
-        decoration: InputDecoration(
-          hintText: widget.hint,
-        ),
+      content: CustomTextFormField(
+        onChanged: (String value) {},
+        hintText: '',
+        borderColor: PRIMARY_COLOR,
+        autofocus: true,
       ),
       actions: [
-        ElevatedButton(
+        TextButton(
           onPressed: () {
             String enteredText = _textEditingController.text;
             Navigator.of(context).pop(enteredText);
           },
-          child: Text('OK'),
+          child: Text(
+            '확인',
+            style: TextStyle(color: PRIMARY_COLOR),
+          ),
         ),
-        ElevatedButton(
+        TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('Cancel'),
+          child: Text(
+            '취소',
+            style: TextStyle(color: BACKGROUND_COLOR),
+          ),
         ),
       ],
     );

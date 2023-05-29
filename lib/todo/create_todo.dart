@@ -116,13 +116,14 @@ class _CreateTodoState extends State<CreateTodo> {
                             var isMine = (index == 0 && widget.todo.isMine) ||
                                 (index == 1 && !widget.todo.isMine);
                             return ChoiceChip(
-                              shape: isMine
-                                  ? StadiumBorder(side: BorderSide(width: 0.5))
-                                  : null,
+                              backgroundColor: BACKGROUND_COLOR,
+                              selectedColor: PRIMARY_COLOR,
                               label: Text(index == 0
                                   ? '나'
                                   : UserDomain.partner?.name ??
-                                      '초대된 사람이 없습니다.'),
+                                      '초대된 사람이 없습니다.',
+                                style: TextStyle(color: Colors.white),
+                              ),
                               selected: isMine,
                               onSelected: (bool selected) {
                                 if (UserDomain.partner == null) {
