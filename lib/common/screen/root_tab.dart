@@ -72,7 +72,7 @@ class _RootTabState extends State<RootTab>
             MaterialPageRoute(
                 builder: (context) => CreateTodo(
                       todo: Todo(
-                        userId: 'remake382',
+                        userId: FirebaseAuth.instance.currentUser!.email!,
                         title: '',
                         isMine: true,
                         isDone: false,
@@ -158,7 +158,11 @@ class _RootTabState extends State<RootTab>
                                               TextButton(
                                                 onPressed: () {
                                                   firestore.collection('host_guest').doc(FirebaseAuth.instance.currentUser?.email ?? '').delete();
+
                                                   Navigator.pop(context);
+                                                  setState(() {
+                                                    UserDomain.partner = null;
+                                                  });
                                                 },
                                                 child: const Text('공유 중단'),
                                               ),

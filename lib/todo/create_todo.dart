@@ -1,6 +1,8 @@
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dodo/user/model/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../common/component/common_text_form_field.dart';
@@ -101,10 +103,35 @@ class _CreateTodoState extends State<CreateTodo> {
                       SizedBox(
                         height: 15,
                       ),
-                      Text(
-                        '누가 할까요?',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w500),
+                      Row(
+                        children: [
+                          Text(
+                            '누가 할까요?',
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500),
+                          ),
+                          UserDomain.partner == null
+                              ? IconButton(
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('알림'),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () { Navigator.pop(context); },
+                                                  child: Text('아니오')),
+                                              TextButton(
+                                                  onPressed: () {},
+                                                  child: Text('네'))
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  icon: Icon(Icons.info))
+                              : Spacer()
+                        ],
                       ),
                       Wrap(
                         spacing: 5.0,
@@ -117,11 +144,19 @@ class _CreateTodoState extends State<CreateTodo> {
                               shape: isMine
                                   ? StadiumBorder(side: BorderSide(width: 0.5))
                                   : null,
-                              label: Text(index == 0 ? '나' : '너'),
+                              label: Text(index == 0
+                                  ? '나'
+                                  : UserDomain.partner?.name ??
+                                      '초대된 사람이 없습니다.'),
                               selected: isMine,
                               onSelected: (bool selected) {
+                                if (UserDomain.partner == null) {
+                                  return;
+                                }
                                 setState(() {
                                   widget.todo.isMine = index == 0 && selected;
+                                  print(((index == 0 && selected) ? FirebaseAuth.instance.currentUser!.email : UserDomain.partner!.email)!);
+                                  widget.todo.userId = ((index == 0 && selected) ? FirebaseAuth.instance.currentUser!.email : UserDomain.partner!.email)!;
                                 });
                               },
                             );

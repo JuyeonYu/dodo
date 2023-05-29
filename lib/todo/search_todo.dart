@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dodo/common/component/common_text_form_field.dart';
 import 'package:dodo/common/const/data.dart';
 import 'package:dodo/common/default_layout.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'component/helper.dart';
@@ -73,9 +74,8 @@ class _SearchtodoState extends State<Searchtodo> {
           child: StreamBuilder<QuerySnapshot>(
             stream: firestore
                 .collection('todo')
-                .where('userId', isEqualTo: 'remake382')
+                .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.email)
                 .where('title', isEqualTo: search)
-                // .where('title', isLessThan: search + 'z')
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {

@@ -1,6 +1,8 @@
 import 'package:dodo/common/const/colors.dart';
 import 'package:dodo/common/const/data.dart';
 import 'package:dodo/todo/create_todo.dart';
+import 'package:dodo/user/model/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'component/helper.dart';
@@ -21,8 +23,7 @@ class _TodoScreenState extends State<TodoScreen> {
     return StreamBuilder<QuerySnapshot>(
       stream: firestore
           .collection('todo')
-          .where('userId', isEqualTo: 'remake382')
-          .where('isMine', isEqualTo: widget.isMine)
+          .where('userId', isEqualTo: widget.isMine ? FirebaseAuth.instance.currentUser!.email : UserDomain.partner!.email)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
