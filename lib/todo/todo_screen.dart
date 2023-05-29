@@ -27,7 +27,8 @@ class _TodoScreenState extends State<TodoScreen> {
           child: Column(
             children: [
               Text('초대된 사람이 없습니다.'),
-              SizedBox(width: 100, height: 100, child: Icon(Icons.accessibility)),
+              SizedBox(
+                  width: 100, height: 100, child: Icon(Icons.accessibility)),
               Padding(
                 padding: const EdgeInsets.all(50.0),
                 child: InviteButtons(),
@@ -40,7 +41,10 @@ class _TodoScreenState extends State<TodoScreen> {
     return StreamBuilder<QuerySnapshot>(
       stream: firestore
           .collection('todo')
-          .where('userId', isEqualTo: widget.isMine ? FirebaseAuth.instance.currentUser!.email : UserDomain.partner!.email)
+          .where('userId',
+              isEqualTo: widget.isMine
+                  ? FirebaseAuth.instance.currentUser!.email
+                  : UserDomain.partner!.email)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {

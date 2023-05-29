@@ -30,7 +30,11 @@ class _TextInputDialogState extends State<TextInputDialog> {
     return AlertDialog(
       title: Text(widget.title),
       content: CustomTextFormField(
-        onChanged: (String value) {},
+        onChanged: (String value) {
+          setState(() {
+            _textEditingController.text = value;
+          });
+        },
         hintText: '',
         borderColor: PRIMARY_COLOR,
         autofocus: true,

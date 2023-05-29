@@ -145,7 +145,7 @@ class _RootTabState extends State<RootTab>
                                               TextButton(
                                                 onPressed: () {
                                                   firestore.collection('host_guest').doc(FirebaseAuth.instance.currentUser?.email ?? '').delete();
-
+                                                  firestore.collection('host_guest').doc(UserDomain.partner?.email ?? '').delete();
                                                   Navigator.pop(context);
                                                   setState(() {
                                                     UserDomain.partner = null;
@@ -162,7 +162,8 @@ class _RootTabState extends State<RootTab>
                                             ]);
                                       });
                                 },
-                                child: Text('공유 중단')),
+
+                                child: Text('공유 중단'), style: ElevatedButton.styleFrom(backgroundColor: BACKGROUND_COLOR),),
                           ],
                         );
                       } else if (snapshot.hasError) {

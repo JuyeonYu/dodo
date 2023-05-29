@@ -68,7 +68,7 @@ class _InviteButtonsState extends State<InviteButtons> {
                     );
                   });
 
-              if (enteredText == null) {
+              if (enteredText == null || enteredText.isEmpty) {
                 return;
               }
               var snapshots = firestore
