@@ -1,3 +1,4 @@
+import 'package:dodo/common/const/colors.dart';
 import 'package:dodo/common/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
+          checkboxTheme: CheckboxThemeData(fillColor: MaterialStatePropertyAll(PRIMARY_COLOR)),
           primarySwatch: Colors.blue,
         ),
         home: const SplashView(),
