@@ -2,33 +2,33 @@ import 'package:dodo/common/const/colors.dart';
 import 'package:dodo/common/const/data.dart';
 import 'package:dodo/todo/create_todo.dart';
 import 'package:dodo/user/invite_buttons.dart';
+import 'package:dodo/user/model/partner_provider.dart';
 import 'package:dodo/user/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'component/helper.dart';
 import 'model/todo.dart';
 
-class TodoScreen extends StatefulWidget {
+class TodoScreen extends ConsumerStatefulWidget {
   TodoScreen({Key? key, required this.isMine}) : super(key: key);
 
   final bool isMine;
 
   @override
-  State<TodoScreen> createState() => _TodoScreenState();
+  ConsumerState<TodoScreen> createState() => _TodoScreenState();
 }
 
-class _TodoScreenState extends State<TodoScreen> {
+class _TodoScreenState extends ConsumerState<TodoScreen> {
   @override
   Widget build(BuildContext context) {
-    if (!widget.isMine && UserDomain.partner == null) {
+    if (!widget.isMine && ref.watch(partnerNotifierProvider.notifier).state == null) {
       return Center(
         child: SingleChildScrollView(
           child: Column(
             children: [
               Text('초대된 사람이 없습니다.'),
-              SizedBox(
-                  width: 100, height: 100, child: Icon(Icons.accessibility)),
               Padding(
                 padding: const EdgeInsets.all(50.0),
                 child: InviteButtons(),
@@ -44,7 +44,7 @@ class _TodoScreenState extends State<TodoScreen> {
           .where('userId',
               isEqualTo: widget.isMine
                   ? FirebaseAuth.instance.currentUser!.email
-                  : UserDomain.partner!.email)
+                  : ref.watch(partnerNotifierProvider)!.email)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {

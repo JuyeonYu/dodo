@@ -1,9 +1,11 @@
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dodo/user/model/partner_provider.dart';
 import 'package:dodo/user/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../common/component/common_text_form_field.dart';
 import '../common/const/colors.dart';
@@ -11,16 +13,16 @@ import '../common/const/data.dart';
 import '../common/default_layout.dart';
 import 'model/todo.dart';
 
-class CreateTodo extends StatefulWidget {
+class CreateTodo extends ConsumerStatefulWidget {
   final Todo todo;
 
   const CreateTodo({Key? key, required this.todo}) : super(key: key);
 
   @override
-  State<CreateTodo> createState() => _CreateTodoState();
+  ConsumerState<CreateTodo> createState() => _CreateTodoState();
 }
 
-class _CreateTodoState extends State<CreateTodo> {
+class _CreateTodoState extends ConsumerState<CreateTodo> {
   late bool _isEditing;
   bool _isSaving = false;
   bool _isDeleting = false;
@@ -120,23 +122,20 @@ class _CreateTodoState extends State<CreateTodo> {
                               selectedColor: PRIMARY_COLOR,
                               label: Text(index == 0
                                   ? '나'
-                                  : UserDomain.partner?.name ??
+                                  : ref.read(partnerNotifierProvider)?.name ??
                                       '초대된 사람이 없습니다.',
                                 style: TextStyle(color: Colors.white),
                               ),
                               selected: isMine,
                               onSelected: (bool selected) {
-                                if (UserDomain.partner == null) {
+                                if (ref.read(partnerNotifierProvider.notifier).state == null) {
                                   return;
                                 }
                                 setState(() {
                                   widget.todo.isMine = index == 0 && selected;
-                                  print(((index == 0 && selected)
-                                      ? FirebaseAuth.instance.currentUser!.email
-                                      : UserDomain.partner!.email)!);
                                   widget.todo.userId = ((index == 0 && selected)
                                       ? FirebaseAuth.instance.currentUser!.email
-                                      : UserDomain.partner!.email)!;
+                                      : ref.read(partnerNotifierProvider)?.email)!;
                                 });
                               },
                             );

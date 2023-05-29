@@ -1,20 +1,22 @@
 import 'package:dodo/common/default_layout.dart';
 import 'package:dodo/common/screen/root_tab.dart';
+import 'package:dodo/user/model/partner_provider.dart';
 import 'package:dodo/user/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../user/login_screen.dart';
 import 'const/colors.dart';
 import 'const/data.dart';
 
-class SplashView extends StatefulWidget {
+class SplashView extends ConsumerStatefulWidget {
   const SplashView({Key? key}) : super(key: key);
 
   @override
-  State<SplashView> createState() => _SplashViewState();
+  ConsumerState<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashViewState extends State<SplashView> {
+class _SplashViewState extends ConsumerState<SplashView> {
   @override
   void initState() {
     super.initState();
@@ -39,7 +41,7 @@ class _SplashViewState extends State<SplashView> {
             goRoot();
             return ;
           }
-          UserDomain.partner = UserDomain(email: event.data()!['partnerEmail'], name: event.data()!['partnerName'], thumbnail: '');
+          ref.read(partnerNotifierProvider.notifier).state = UserDomain(email: event.data()!['partnerEmail'], name: event.data()!['partnerName'], thumbnail: '');
           goRoot();
         });
       }

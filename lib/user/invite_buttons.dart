@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dodo/user/model/partner_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../common/component/text_input_dialog.dart';
@@ -9,14 +11,14 @@ import '../common/const/data.dart';
 import '../common/util/helper.dart';
 import 'model/user.dart';
 
-class InviteButtons extends StatefulWidget {
+class InviteButtons extends ConsumerStatefulWidget {
   const InviteButtons({Key? key}) : super(key: key);
 
   @override
-  State<InviteButtons> createState() => _InviteButtonsState();
+  ConsumerState<InviteButtons> createState() => _InviteButtonsState();
 }
 
-class _InviteButtonsState extends State<InviteButtons> {
+class _InviteButtonsState extends ConsumerState<InviteButtons> {
   bool inInvitated = false;
 
   @override
@@ -115,9 +117,9 @@ class _InviteButtonsState extends State<InviteButtons> {
                               ),
                               TextButton(
                                 onPressed: () async {
-                                  setState(() {
-                                    inInvitated = true;
-                                  });
+                                  // setState(() {
+                                  //   inInvitated = true;
+                                  // });
                                   await firestore
                                       .collection('host_guest')
                                       .doc(FirebaseAuth
@@ -138,13 +140,11 @@ class _InviteButtonsState extends State<InviteButtons> {
                                             .currentUser?.displayName ??
                                         '',
                                   });
-                                  UserDomain.partner = UserDomain(
+                                  ref.read(partnerNotifierProvider.notifier).setPartner(UserDomain(
                                       email: hostEmail,
                                       name: hostName,
-                                      thumbnail: '');
-                                  setState(() {
-                                    inInvitated = false;
-                                  });
+                                      thumbnail: ''));
+                                  // Navigator.pop(context);
                                   Navigator.of(context).pop();
                                 },
                                 child: const Text('네'),

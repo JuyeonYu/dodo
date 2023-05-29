@@ -4,9 +4,11 @@ import 'package:dodo/todo/create_todo.dart';
 import 'package:dodo/todo/search_todo.dart';
 import 'package:dodo/user/invite_buttons.dart';
 import 'package:dodo/user/login_screen.dart';
+import 'package:dodo/user/model/partner_provider.dart';
 import 'package:dodo/user/more_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../todo/model/todo.dart';
 import '../../todo/todo_tab_screen.dart';
@@ -21,14 +23,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../util/helper.dart';
 
-class RootTab extends StatefulWidget {
+class RootTab extends ConsumerStatefulWidget {
   const RootTab({Key? key}) : super(key: key);
 
   @override
-  State<RootTab> createState() => _RootTabState();
+  ConsumerState<RootTab> createState() => _RootTabState();
 }
 
-class _RootTabState extends State<RootTab>
+class _RootTabState extends ConsumerState<RootTab>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   late TabController controller;
   int index = 0;
@@ -64,6 +66,7 @@ class _RootTabState extends State<RootTab>
   }
 
   Widget build(BuildContext context) {
+    final state = ref.watch(partnerNotifierProvider);
     return DefaultLayout(
       title: 'dodo',
       floatingActionButton: FloatingActionButton(
@@ -74,7 +77,7 @@ class _RootTabState extends State<RootTab>
             MaterialPageRoute(
                 builder: (context) => CreateTodo(
                       todo: Todo(
-                        userId: index == 0 ? FirebaseAuth.instance.currentUser!.email! : UserDomain.partner!.email,
+                        userId: index == 0 ? FirebaseAuth.instance.currentUser!.email! : ref.read(partnerNotifierProvider)?.email ?? '',
                         title: '',
                         isMine: index == 0,
                         isDone: false,
@@ -131,7 +134,7 @@ class _RootTabState extends State<RootTab>
                         return Column(crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             // Text('${data['partnerName']}(${data['partnerEmail']}}'),
-                            Text('${UserDomain.partner!.name}(${UserDomain.partner!.email}}'),
+                            Text('${state?.name}(${state?.email}}'),
                             ElevatedButton(
                                 onPressed: () {
                                   showDialog<String>(
@@ -143,13 +146,11 @@ class _RootTabState extends State<RootTab>
                                                 '상대방의 할일 목록이 모두 사라집니다. 그래도 진행할까요?'),
                                             actions: <Widget>[
                                               TextButton(
-                                                onPressed: () {
-                                                  firestore.collection('host_guest').doc(FirebaseAuth.instance.currentUser?.email ?? '').delete();
-                                                  firestore.collection('host_guest').doc(UserDomain.partner?.email ?? '').delete();
+                                                onPressed: () async {
+                                                  await firestore.collection('host_guest').doc(FirebaseAuth.instance.currentUser?.email ?? '').delete();
+                                                  await firestore.collection('host_guest').doc(ref.read(partnerNotifierProvider)?.email ?? '').delete();
+                                                  ref.read(partnerNotifierProvider.notifier).delete();
                                                   Navigator.pop(context);
-                                                  setState(() {
-                                                    UserDomain.partner = null;
-                                                  });
                                                 },
                                                 child: const Text('공유 중단'),
                                               ),
@@ -174,7 +175,6 @@ class _RootTabState extends State<RootTab>
                         return Column(crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Text('초대된 사람이 없습니다.'),
-                            InviteButtons(),
                           ],
                         );
                       }

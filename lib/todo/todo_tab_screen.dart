@@ -1,17 +1,19 @@
 import 'package:dodo/common/const/colors.dart';
 import 'package:dodo/common/default_layout.dart';
 import 'package:dodo/todo/todo_screen.dart';
+import 'package:dodo/user/model/partner_provider.dart';
 import 'package:dodo/user/model/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TodoTabScreen extends StatefulWidget {
+class TodoTabScreen extends ConsumerStatefulWidget {
   const TodoTabScreen({Key? key}) : super(key: key);
 
   @override
-  State<TodoTabScreen> createState() => _TodoTabScreenState();
+  ConsumerState<TodoTabScreen> createState() => _TodoTabScreenState();
 }
 
-class _TodoTabScreenState extends State<TodoTabScreen>
+class _TodoTabScreenState extends ConsumerState<TodoTabScreen>
     with TickerProviderStateMixin {
   TabController? _tabController;
 
@@ -51,7 +53,7 @@ class _TodoTabScreenState extends State<TodoTabScreen>
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8),
-                      child: UserDomain.partner == null ? Text('초대된 친구가 없습니다.') : Text(UserDomain.partner!.name),
+                      child: ref.watch(partnerNotifierProvider.notifier).state == null ? Text('초대된 친구가 없습니다.') : Text(ref.watch(partnerNotifierProvider)!.name),
                     ),
                   ],
                   controller: _tabController),
@@ -70,9 +72,6 @@ class _TodoTabScreenState extends State<TodoTabScreen>
           TodoScreen(
             isMine: false,
           ),
-          // UserDomain.partner == null ? Spacer() : TodoScreen(
-          //   isMine: false,
-          // ),
         ],
       ),
     );
