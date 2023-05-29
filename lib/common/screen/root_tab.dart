@@ -8,6 +8,7 @@ import 'package:dodo/user/model/partner_provider.dart';
 import 'package:dodo/user/more_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../todo/model/todo.dart';
@@ -193,7 +194,7 @@ class _RootTabState extends ConsumerState<RootTab>
               ),
               title: Text('문의하기'),
               onTap: () {
-                print('Q&A is clicked');
+                FlutterEmailSender.send(Email(subject: '[dodo 문의]', recipients: ['remake382@gmail.com']));
               },
             ),
             ListTile(

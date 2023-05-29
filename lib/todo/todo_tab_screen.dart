@@ -3,6 +3,7 @@ import 'package:dodo/common/default_layout.dart';
 import 'package:dodo/todo/todo_screen.dart';
 import 'package:dodo/user/model/partner_provider.dart';
 import 'package:dodo/user/model/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -49,7 +50,7 @@ class _TodoTabScreenState extends ConsumerState<TodoTabScreen>
                   tabs: [
                     Padding(
                       padding: const EdgeInsets.all(8),
-                      child: Text("Mine"),
+                      child: Text('나'),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8),

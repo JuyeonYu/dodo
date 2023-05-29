@@ -92,8 +92,8 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
         });
         return ListView(
           children: [
-            Helper.BuildSection('Pending', pendingTodos),
-            Helper.BuildSection('Completed', completedTodos),
+            Helper.BuildSection('진행중', pendingTodos),
+            Helper.BuildSection('완료됨', completedTodos),
           ],
         );
       },
