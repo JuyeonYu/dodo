@@ -43,7 +43,11 @@ class _RootTabState extends State<RootTab>
   void initState() {
     super.initState();
     controller = TabController(length: 2, vsync: this);
-    controller.addListener(tabListener);
+    controller.addListener(() {
+      setState(() {
+        index = controller.index;
+      });
+    });
   }
 
   @override
@@ -72,9 +76,9 @@ class _RootTabState extends State<RootTab>
             MaterialPageRoute(
                 builder: (context) => CreateTodo(
                       todo: Todo(
-                        userId: FirebaseAuth.instance.currentUser!.email!,
+                        userId: index == 0 ? FirebaseAuth.instance.currentUser!.email! : UserDomain.partner!.email,
                         title: '',
-                        isMine: true,
+                        isMine: index == 0,
                         isDone: false,
                         type: 0,
                         timestamp: Timestamp.now(),
@@ -88,7 +92,7 @@ class _RootTabState extends State<RootTab>
       child: TabBarView(
         physics: NeverScrollableScrollPhysics(),
         controller: controller,
-        children: [TodoTabScreen(), ConfigScreen()],
+        children: [TodoTabScreen()],
       ),
       // bottomNavigationBar: BottomNavigationBar(
       //   selectedItemColor: PRIMARY_COLOR,

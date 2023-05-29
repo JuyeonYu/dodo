@@ -33,39 +33,33 @@ class _TodoTabScreenState extends State<TodoTabScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(52),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: AppBar(
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TabBar(
-                      labelColor: BODY_TEXT_COLOR,
-                      indicatorColor: BODY_TEXT_COLOR,
-                      isScrollable: true,
-                      tabs: [
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text("Mine"),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: UserDomain.partner == null ? Text('공유한 친구가 없습니다.') : Text(UserDomain.partner!.name),
-                        ),
-                      ],
-                      controller: _tabController),
-                ),
-              ),
+      appBar: AppBar(
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TabBar(
+                  labelColor: BODY_TEXT_COLOR,
+                  indicatorColor: BODY_TEXT_COLOR,
+                  isScrollable: true,
+                  tabs: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text("Mine"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: UserDomain.partner == null ? Text('공유한 친구가 없습니다.') : Text(UserDomain.partner!.name),
+                    ),
+                  ],
+                  controller: _tabController),
             ),
-            backgroundColor: Colors.white,
-            elevation: 0,
           ),
         ),
+        backgroundColor: Colors.white,
+        elevation: 0,
       ),
       body: TabBarView(
         controller: _tabController,
@@ -73,9 +67,12 @@ class _TodoTabScreenState extends State<TodoTabScreen>
           TodoScreen(
             isMine: true,
           ),
-          UserDomain.partner == null ? Spacer() : TodoScreen(
+          TodoScreen(
             isMine: false,
           ),
+          // UserDomain.partner == null ? Spacer() : TodoScreen(
+          //   isMine: false,
+          // ),
         ],
       ),
     );

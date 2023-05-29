@@ -27,7 +27,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   void checkToken() async {
-    FirebaseAuth.instance.authStateChanges().listen((user) {
+    FirebaseAuth.instance.authStateChanges().listen((user) async {
       if (user == null) {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => LoginScreen()),
@@ -35,15 +35,22 @@ class _SplashViewState extends State<SplashView> {
         );
       } else {
         firestore.collection('host_guest').doc(FirebaseAuth.instance.currentUser!.email).snapshots().listen((event) {
-          if (event.data() == null) { return ; }
+          if (event.data() == null) {
+            goRoot();
+            return ;
+          }
           UserDomain.partner = UserDomain(email: event.data()!['partnerEmail'], name: event.data()!['partnerName'], thumbnail: '');
+          goRoot();
         });
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => RootTab()),
-          (route) => false,
-        );
       }
     });
+  }
+
+  void goRoot() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => RootTab()),
+          (route) => false,
+    );
   }
 
   @override

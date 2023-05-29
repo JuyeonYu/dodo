@@ -1,6 +1,7 @@
 import 'package:dodo/common/const/colors.dart';
 import 'package:dodo/common/const/data.dart';
 import 'package:dodo/todo/create_todo.dart';
+import 'package:dodo/user/invite_buttons.dart';
 import 'package:dodo/user/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,18 @@ class TodoScreen extends StatefulWidget {
 class _TodoScreenState extends State<TodoScreen> {
   @override
   Widget build(BuildContext context) {
+    if (!widget.isMine && UserDomain.partner == null) {
+      return Column(mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('초대된 사람이 없습니다.'),
+          SizedBox(width: 100, height: 100, child: Icon(Icons.accessibility)),
+          Padding(
+            padding: const EdgeInsets.all(50.0),
+            child: InviteButtons(),
+          ),
+        ],
+      );
+    }
     return StreamBuilder<QuerySnapshot>(
       stream: firestore
           .collection('todo')

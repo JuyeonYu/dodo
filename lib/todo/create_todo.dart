@@ -103,35 +103,10 @@ class _CreateTodoState extends State<CreateTodo> {
                       SizedBox(
                         height: 15,
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            '누가 할까요?',
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500),
-                          ),
-                          UserDomain.partner == null
-                              ? IconButton(
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text('알림'),
-                                            actions: [
-                                              TextButton(
-                                                  onPressed: () { Navigator.pop(context); },
-                                                  child: Text('아니오')),
-                                              TextButton(
-                                                  onPressed: () {},
-                                                  child: Text('네'))
-                                            ],
-                                          );
-                                        });
-                                  },
-                                  icon: Icon(Icons.info))
-                              : Spacer()
-                        ],
+                      Text(
+                        '누가 할까요?',
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w500),
                       ),
                       Wrap(
                         spacing: 5.0,
@@ -155,8 +130,12 @@ class _CreateTodoState extends State<CreateTodo> {
                                 }
                                 setState(() {
                                   widget.todo.isMine = index == 0 && selected;
-                                  print(((index == 0 && selected) ? FirebaseAuth.instance.currentUser!.email : UserDomain.partner!.email)!);
-                                  widget.todo.userId = ((index == 0 && selected) ? FirebaseAuth.instance.currentUser!.email : UserDomain.partner!.email)!;
+                                  print(((index == 0 && selected)
+                                      ? FirebaseAuth.instance.currentUser!.email
+                                      : UserDomain.partner!.email)!);
+                                  widget.todo.userId = ((index == 0 && selected)
+                                      ? FirebaseAuth.instance.currentUser!.email
+                                      : UserDomain.partner!.email)!;
                                 });
                               },
                             );
