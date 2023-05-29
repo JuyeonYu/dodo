@@ -1,5 +1,6 @@
 import 'package:dodo/common/default_layout.dart';
 import 'package:dodo/common/screen/root_tab.dart';
+import 'package:dodo/user/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../user/login_screen.dart';
@@ -33,6 +34,10 @@ class _SplashViewState extends State<SplashView> {
           (route) => false,
         );
       } else {
+        firestore.collection('host_guest').doc(FirebaseAuth.instance.currentUser!.email).snapshots().listen((event) {
+          if (event.data() == null) { return ; }
+          UserDomain.partner = UserDomain(email: event.data()!['partnerEmail'], name: event.data()!['partnerName'], thumbnail: '');
+        });
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => RootTab()),
           (route) => false,
