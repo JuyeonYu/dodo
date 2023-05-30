@@ -71,6 +71,6 @@ class DefaultFirebaseOptions {
     projectId: 'couple-todo-a5771',
     storageBucket: 'couple-todo-a5771.appspot.com',
     iosClientId: '873377705460-a68kohinr2s6050fufu2c7e92jqkn11c.apps.googleusercontent.com',
-    iosBundleId: 'com.example.dodo',
+    iosBundleId: 'com.chaechae.dodo',
   );
 }

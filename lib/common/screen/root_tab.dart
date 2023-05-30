@@ -67,6 +67,7 @@ class _RootTabState extends ConsumerState<RootTab>
   }
 
   Widget build(BuildContext context) {
+    print(FirebaseAuth.instance.currentUser?.photoURL);
     final state = ref.watch(partnerNotifierProvider);
     return DefaultLayout(
       title: 'dodo',
@@ -124,7 +125,7 @@ class _RootTabState extends ConsumerState<RootTab>
                 children: [
                   StreamBuilder<DocumentSnapshot>(
                     stream: firestore
-                        .collection('host_guest')
+                        .collection('partnership')
                         .doc(FirebaseAuth.instance.currentUser?.email ?? '')
                         .snapshots(), // 구독할 스트림을 지정
                     builder: (BuildContext context,
@@ -148,8 +149,8 @@ class _RootTabState extends ConsumerState<RootTab>
                                             actions: <Widget>[
                                               TextButton(
                                                 onPressed: () async {
-                                                  await firestore.collection('host_guest').doc(FirebaseAuth.instance.currentUser?.email ?? '').delete();
-                                                  await firestore.collection('host_guest').doc(ref.read(partnerNotifierProvider)?.email ?? '').delete();
+                                                  await firestore.collection('partnership').doc(FirebaseAuth.instance.currentUser?.email ?? '').delete();
+                                                  await firestore.collection('partnership').doc(ref.read(partnerNotifierProvider)?.email ?? '').delete();
                                                   ref.read(partnerNotifierProvider.notifier).delete();
                                                   Navigator.pop(context);
                                                 },

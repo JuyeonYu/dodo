@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../common/component/common_text_form_field.dart';
 import '../common/const/colors.dart';
@@ -26,88 +28,107 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
+        // backgroundColor: TEXT_COLOR,
         child: Padding(
       padding: const EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height - 32,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height - 32,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              height: 32,
+            ),
+            SizedBox(
+                width: MediaQuery.of(context).size.width / 3,
+                height: MediaQuery.of(context).size.width / 3,
+                child: Image.asset(
+                  'assets/images/logo.png',
+                )),
+
+            Container(
+              child: SizedBox(
                 height: 32,
               ),
-              Icon(
-                Icons.ac_unit_outlined,
-                size: MediaQuery.of(context).size.width / 3,
-              ),
-              Container(
-                child: SizedBox(
-                  height: 32,
-                ),
-              ),
-              Text(
-                '행복한 하루 되세요!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-              ),
-              SizedBox(
-                height: 32,
-              ),
-              SizedBox(
-                height: 32,
-              ),
-              ElevatedButton(
-                  onPressed: () async {
-                    UserCredential userCredential = await signInWithGoogle();
-                    if (userCredential.user?.email != null) {
-                      UserDomain.myself.email = userCredential.user!.email!;
-                    }
-                    if (userCredential.user?.displayName != null) {
-                      UserDomain.myself.name = userCredential.user!.displayName!;
-                    }
-                    if (userCredential.user?.photoURL != null) {
-                      UserDomain.myself.thumbnail = userCredential.user!.photoURL!;
-                    }
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (_) => RootTab()),
-                            (route) => false);
-                  },
-                  child: Text('login with google')),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: PRIMARY_COLOR,
-                      padding: EdgeInsets.all(16)),
-                  onPressed: () async {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (_) => RootTab()),
-                        (route) => false);
-                  },
-                  child: Text(
-                    'sign in',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  )),
-              Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        print('email: $email');
-                      },
-                      icon: Icon(Icons.adb)),
-                  IconButton(
-                      onPressed: () {}, icon: Icon(Icons.ac_unit_outlined)),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.adb))
-                ],
-              ),
-              TextButton(
-                  onPressed: () async {},
-                  child: Text(
-                    '회원가입',
-                    style: TextStyle(color: Colors.black),
-                  ))
-            ],
-          ),
+            ),
+            Text(
+              '우리 둘이 두두!',
+              style: TextStyle(
+                  // fontFamily: ,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: TEXT_COLOR),
+            ),
+            Spacer(),
+
+            defaultTargetPlatform == TargetPlatform.android
+                ? ElevatedButton(
+                    onPressed: () async {
+                      UserCredential userCredential = await signInWithGoogle();
+                      if (userCredential.user?.email != null) {
+                        UserDomain.myself.email = userCredential.user!.email!;
+                      }
+                      if (userCredential.user?.displayName != null) {
+                        UserDomain.myself.name =
+                            userCredential.user!.displayName!;
+                      }
+                      if (userCredential.user?.photoURL != null) {
+                        UserDomain.myself.thumbnail =
+                            userCredential.user!.photoURL!;
+                      }
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (_) => RootTab()),
+                          (route) => false);
+                    },
+                    child: Image.asset('assets/images/google_login.png'))
+                : SignInWithAppleButton(
+                    onPressed: () async {
+                      final appleCredential =
+                          await SignInWithApple.getAppleIDCredential(
+                        scopes: [
+                          AppleIDAuthorizationScopes.email,
+                          AppleIDAuthorizationScopes.fullName,
+                        ],
+                      );
+                      final oauthCredential = OAuthProvider("apple.com").credential(
+                        idToken: appleCredential.identityToken,
+                        accessToken: appleCredential.authorizationCode,
+                      );
+
+                      await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+
+                      // updateAccount(); //실제 로그인/회원가입을 진행할 떄 필요한 코드를 작성하시면 됩니다.
+
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (_) => RootTab()),
+                          (route) => false);
+                      // print(credential);
+
+                      // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+                      // after they have been validated with Apple (see `Integration` section for more information on how to do this)
+                    },
+                  )
+// :FloatingActionButton.extended(onPressed: (){}, label: Row(children: [Image.asset('assets/images/apple_logo.svg'), Icon(Icons.apple), Text('Apple로 로그인하기')]), backgroundColor: Colors.black,)
+//                 : ElevatedButton(
+//                     onPressed: () async {
+//                       UserCredential userCredential = await signInWithGoogle();
+//                       if (userCredential.user?.email != null) {
+//                         UserDomain.myself.email = userCredential.user!.email!;
+//                       }
+//                       if (userCredential.user?.displayName != null) {
+//                         UserDomain.myself.name =
+//                             userCredential.user!.displayName!;
+//                       }
+//                       if (userCredential.user?.photoURL != null) {
+//                         UserDomain.myself.thumbnail =
+//                             userCredential.user!.photoURL!;
+//                       }
+//                       Navigator.of(context).pushAndRemoveUntil(
+//                           MaterialPageRoute(builder: (_) => RootTab()),
+//                           (route) => false);
+//                     },
+//                     child: Text('login with apple')),
+          ],
         ),
       ),
     ));

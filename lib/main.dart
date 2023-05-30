@@ -3,11 +3,14 @@ import 'package:dodo/common/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // MobileAds.instance.initialize();
+
   runApp(const MyApp());
 }
 
@@ -22,6 +25,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           checkboxTheme: CheckboxThemeData(fillColor: MaterialStatePropertyAll(PRIMARY_COLOR)),
+          fontFamily: 'Pretendard',
           primarySwatch: Colors.blue,
         ),
         home: const SplashView(),

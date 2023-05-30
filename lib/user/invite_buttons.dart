@@ -3,6 +3,7 @@ import 'package:dodo/user/model/partner_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../common/component/text_input_dialog.dart';
@@ -10,6 +11,7 @@ import '../common/const/colors.dart';
 import '../common/const/data.dart';
 import '../common/util/helper.dart';
 import 'model/user.dart';
+import 'package:flutter/foundation.dart';
 
 class InviteButtons extends ConsumerStatefulWidget {
   const InviteButtons({Key? key}) : super(key: key);
@@ -20,6 +22,30 @@ class InviteButtons extends ConsumerStatefulWidget {
 
 class _InviteButtonsState extends ConsumerState<InviteButtons> {
   bool inInvitated = false;
+  // AdManagerInterstitialAd? _interstitialAd;
+
+  @override
+  void initState() {
+    super.initState();
+    // loadAd();
+  }
+
+  void loadAd() {
+    // AdManagerInterstitialAd.load(
+    //     adUnitId: defaultTargetPlatform == TargetPlatform.android
+    //         ? androidFullAdId
+    //         : 'ca-app-pub-7604048409167711/7735304920',
+    //     request: const AdManagerAdRequest(),
+    //     adLoadCallback: AdManagerInterstitialAdLoadCallback(
+    //       onAdLoaded: (ad) {
+    //         debugPrint('$ad loaded.');
+    //         _interstitialAd = ad;
+    //       },
+    //       onAdFailedToLoad: (LoadAdError error) {
+    //         debugPrint('AdManagerInterstitialAd failed to load: $error');
+    //       },
+    //     ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +69,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
               showDialog<String>(
                   context: context,
                   builder: (BuildContext context) {
+                    // _interstitialAd?.show();
                     return AlertDialog(
                         title: Text(shareCode),
                         content: const Text('위 코드를 상대방에게 공유하세요.'),
@@ -61,6 +88,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
         ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             onPressed: () async {
+              // _interstitialAd?.show();
               String? enteredText = await showDialog<String>(
                   context: context,
                   builder: (BuildContext context) {
@@ -121,7 +149,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                   //   inInvitated = true;
                                   // });
                                   await firestore
-                                      .collection('host_guest')
+                                      .collection('partnership')
                                       .doc(FirebaseAuth
                                               .instance.currentUser?.email ??
                                           '')
@@ -130,7 +158,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                     'partnerName': hostName,
                                   });
                                   await firestore
-                                      .collection('host_guest')
+                                      .collection('partnership')
                                       .doc(hostEmail)
                                       .set({
                                     'partnerEmail': FirebaseAuth

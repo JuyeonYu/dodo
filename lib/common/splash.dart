@@ -36,7 +36,7 @@ class _SplashViewState extends ConsumerState<SplashView> {
           (route) => false,
         );
       } else {
-        firestore.collection('host_guest').doc(FirebaseAuth.instance.currentUser!.email).snapshots().listen((event) {
+        firestore.collection('partnership').doc(FirebaseAuth.instance.currentUser!.email).snapshots().listen((event) {
           if (event.data() == null) {
             goRoot();
             return ;
