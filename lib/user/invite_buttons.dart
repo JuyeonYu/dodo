@@ -59,7 +59,8 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
         ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             onPressed: () {
-              if (ref.read(nicknameProvider) == null || ref.read(nicknameProvider)!.isEmpty) {
+              if (ref.read(nicknameProvider) == null ||
+                  ref.read(nicknameProvider)!.isEmpty) {
                 showSetNicknameSnackBar(context);
                 return;
               }
@@ -69,9 +70,8 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                   .doc(FirebaseAuth.instance.currentUser?.email ?? '')
                   .set({
                 'code': shareCode,
-                'hostEmail': FirebaseAuth.instance.currentUser?.email ?? '',
-                'hostName':
-                    FirebaseAuth.instance.currentUser?.displayName ?? '',
+                'email': FirebaseAuth.instance.currentUser?.email ?? '',
+                'name': ref.read(nicknameProvider),
                 'timestamp': Timestamp.now()
               }, SetOptions(merge: true));
               showDialog<String>(
@@ -98,7 +98,8 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
             style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             onPressed: () async {
               // _interstitialAd?.show();
-              if (ref.read(nicknameProvider) == null || ref.read(nicknameProvider)!.isEmpty) {
+              if (ref.read(nicknameProvider) == null ||
+                  ref.read(nicknameProvider)!.isEmpty) {
                 showSetNicknameSnackBar(context);
                 return;
               }
@@ -125,15 +126,14 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                       context: context,
                       builder: (BuildContext context) {
                         Map<String, dynamic> json = event.docs.first.data();
-                        String hostName = json['hostName'];
-                        String hostEmail = json['hostEmail'];
+                        String hostName = json['name'];
+                        String hostEmail = json['email'];
                         Timestamp timestamp = json['timestamp'];
                         int diff = Timestamp.now().compareTo(timestamp);
                         print(diff);
                         return AlertDialog(
                             title: Text('알림'),
-                            content: Text(
-                                '초대한 사람의 정보가 맞습니까?\n이름: ${hostName}\nemail: ${hostEmail}'),
+                            content: Text('초대한 사람의 정보가 맞습니까?\n닉네임: $hostName'),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {

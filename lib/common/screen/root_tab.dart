@@ -37,7 +37,6 @@ class _RootTabState extends ConsumerState<RootTab>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   late TabController controller;
   int index = 0;
-  int? _value = 1;
   bool inSignout = false;
   bool inInvitated = false;
   bool showIndicator = false;
@@ -117,7 +116,11 @@ class _RootTabState extends ConsumerState<RootTab>
                         children: [
                           Text(
                             ref.watch(nicknameProvider) ?? '설정된 닉네임이 없습니다.',
-                            style: TextStyle(color: Colors.white, fontSize:ref.watch(nicknameProvider) == null ? 15 : 25),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: ref.watch(nicknameProvider) == null
+                                    ? 15
+                                    : 25),
                             maxLines: 2,
                           ),
                           IconButton(
@@ -155,9 +158,9 @@ class _RootTabState extends ConsumerState<RootTab>
                         .snapshots(), // 구독할 스트림을 지정
                     builder: (BuildContext context,
                         AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      if (snapshot.data?.data() != null) {
-                        Map<String, dynamic> data =
-                            snapshot.data?.data() as Map<String, dynamic>;
+                      Map<String, dynamic> data =
+                          snapshot.data?.data() as Map<String, dynamic>;
+                      if (data['partnerEmail'] != null) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [

@@ -33,47 +33,45 @@ class _SplashViewState extends ConsumerState<SplashView> {
   }
 
   void checkToken() async {
-    String? nickname = await getNickName();
-    if (nickname == null || nickname.isEmpty) {
+    Map<String, dynamic>? json = (await firestore
+        .collection('user')
+        .doc(FirebaseAuth.instance.currentUser!.email!)
+        .get())
+        .data();
+    String? nickname = json?['nickname'];
+    if (nickname == null || nickname!.isEmpty) {
       await setNickname(context, ref);
     } else {
-      String? nickname = (await firestore
-              .collection('user')
-              .doc(FirebaseAuth.instance.currentUser!.email!)
-              .get())
-          .data()?['nickname'];
       ref.read(nicknameProvider.notifier).state = nickname;
     }
 
     FirebaseAuth.instance.authStateChanges().listen((user) async {
       if (user == null) {
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => LoginScreen()),
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
           (route) => false,
         );
       } else {
-        firestore
-            .collection('user')
-            .doc(FirebaseAuth.instance.currentUser!.email)
-            .snapshots()
-            .listen((event) {
-          if (event.data() == null) {
-            goRoot();
-            return;
-          }
-          ref.read(partnerNotifierProvider.notifier).state = UserDomain(
-              email: event.data()!['partnerEmail'],
-              name: event.data()!['partnerName'],
-              thumbnail: '');
+        if (json == null) {
           goRoot();
-        });
+          return;
+        }
+        if (json?['partnerEmail'] == null) {
+          ref.read(partnerNotifierProvider.notifier).state = null;
+        } else {
+          ref.read(partnerNotifierProvider.notifier).state = UserDomain(
+              email: json!['partnerEmail'],
+              name: json?['partnerName'] ?? '',
+              thumbnail: '');
+        }
+        goRoot();
       }
     });
   }
 
   void goRoot() {
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => RootTab()),
+      MaterialPageRoute(builder: (_) => const RootTab()),
       (route) => false,
     );
   }
@@ -91,10 +89,10 @@ class _SplashViewState extends ConsumerState<SplashView> {
                   width: MediaQuery.of(context).size.width / 2,
                   height: MediaQuery.of(context).size.width / 2,
                   child: Image.asset('assets/images/logo.png')),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
-              CircularProgressIndicator(
+              const CircularProgressIndicator(
                 color: Colors.white,
               )
             ],
