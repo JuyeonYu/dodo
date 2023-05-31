@@ -94,6 +94,9 @@ flutter:
     - family: Pretendard
       fonts:
         - asset: assets/fonts/MBC1961.otf
+    - family: Robot
+      fonts:
+        - asset: assets/fonts/Roboto-Medium.ttf
 #          weight: 100
 #        - asset: assets/fonts/Pretendard-ExtraLight.ttf
 #          weight: 200

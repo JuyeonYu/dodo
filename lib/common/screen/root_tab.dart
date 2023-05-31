@@ -67,10 +67,9 @@ class _RootTabState extends ConsumerState<RootTab>
   }
 
   Widget build(BuildContext context) {
-    print(FirebaseAuth.instance.currentUser?.photoURL);
     final state = ref.watch(partnerNotifierProvider);
     return DefaultLayout(
-      title: 'dodo',
+      title: '두두',
       floatingActionButton: FloatingActionButton(
         backgroundColor: PRIMARY_COLOR,
         onPressed: () {
@@ -79,7 +78,9 @@ class _RootTabState extends ConsumerState<RootTab>
             MaterialPageRoute(
                 builder: (context) => CreateTodo(
                       todo: Todo(
-                        userId: index == 0 ? FirebaseAuth.instance.currentUser!.email! : ref.read(partnerNotifierProvider)?.email ?? '',
+                        userId: index == 0
+                            ? FirebaseAuth.instance.currentUser!.email!
+                            : ref.read(partnerNotifierProvider)?.email ?? '',
                         title: '',
                         isMine: index == 0,
                         isDone: false,
@@ -102,12 +103,6 @@ class _RootTabState extends ConsumerState<RootTab>
           padding: EdgeInsets.zero,
           children: <Widget>[
             UserAccountsDrawerHeader(
-              currentAccountPicture: CircleAvatar(
-                // 현재 계정 이미지 set
-                backgroundImage: NetworkImage(
-                    FirebaseAuth.instance.currentUser?.photoURL ?? ''),
-                backgroundColor: Colors.white,
-              ),
               accountName:
                   Text(FirebaseAuth.instance.currentUser?.displayName ?? ''),
               accountEmail:
@@ -133,40 +128,61 @@ class _RootTabState extends ConsumerState<RootTab>
                       if (snapshot.data?.data() != null) {
                         Map<String, dynamic> data =
                             snapshot.data?.data() as Map<String, dynamic>;
-                        return Column(crossAxisAlignment: CrossAxisAlignment.stretch,
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             // Text('${data['partnerName']}(${data['partnerEmail']}}'),
                             Text('${state?.name}(${state?.email}}'),
                             ElevatedButton(
-                                onPressed: () {
-                                  showDialog<String>(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                            title: Text('알림'),
-                                            content: const Text(
-                                                '상대방의 할일 목록이 모두 사라집니다. 그래도 진행할까요?'),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () async {
-                                                  await firestore.collection('partnership').doc(FirebaseAuth.instance.currentUser?.email ?? '').delete();
-                                                  await firestore.collection('partnership').doc(ref.read(partnerNotifierProvider)?.email ?? '').delete();
-                                                  ref.read(partnerNotifierProvider.notifier).delete();
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text('공유 중단'),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text('취소'),
-                                              ),
-                                            ]);
-                                      });
-                                },
-
-                                child: Text('공유 중단'), style: ElevatedButton.styleFrom(backgroundColor: BACKGROUND_COLOR),),
+                              onPressed: () {
+                                showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                          title: Text('알림'),
+                                          content: const Text(
+                                              '상대방의 할일 목록이 모두 사라집니다. 그래도 진행할까요?'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () async {
+                                                await firestore
+                                                    .collection('partnership')
+                                                    .doc(FirebaseAuth
+                                                            .instance
+                                                            .currentUser
+                                                            ?.email ??
+                                                        '')
+                                                    .delete();
+                                                await firestore
+                                                    .collection('partnership')
+                                                    .doc(ref
+                                                            .read(
+                                                                partnerNotifierProvider)
+                                                            ?.email ??
+                                                        '')
+                                                    .delete();
+                                                ref
+                                                    .read(
+                                                        partnerNotifierProvider
+                                                            .notifier)
+                                                    .delete();
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('공유 중단'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('취소'),
+                                            ),
+                                          ]);
+                                    });
+                              },
+                              child: Text('공유 중단'),
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: BACKGROUND_COLOR),
+                            ),
                           ],
                         );
                       } else if (snapshot.hasError) {
@@ -174,7 +190,8 @@ class _RootTabState extends ConsumerState<RootTab>
                         return Text('Error: ${snapshot.error}');
                       } else {
                         // 데이터가 없는 경우 UI 업데이트
-                        return Column(crossAxisAlignment: CrossAxisAlignment.stretch,
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Text('초대된 사람이 없습니다.'),
                           ],
@@ -195,7 +212,8 @@ class _RootTabState extends ConsumerState<RootTab>
               ),
               title: Text('문의하기'),
               onTap: () {
-                FlutterEmailSender.send(Email(subject: '[dodo 문의]', recipients: ['remake382@gmail.com']));
+                FlutterEmailSender.send(Email(
+                    subject: '[dodo 문의]', recipients: ['remake382@gmail.com']));
               },
             ),
             ListTile(

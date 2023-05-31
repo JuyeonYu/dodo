@@ -45,42 +45,85 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Image.asset(
                   'assets/images/logo.png',
                 )),
-
             Container(
               child: SizedBox(
                 height: 32,
               ),
             ),
-            Text(
-              '우리 둘이 두두!',
-              style: TextStyle(
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                '이 일은 내가 하고,',
+                style: TextStyle(
                   // fontFamily: ,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: TEXT_COLOR),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w100,
+                    color: TEXT_COLOR),
+              ),
             ),
-            Spacer(),
 
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                '저 일은 네가 하고',
+                style: TextStyle(
+                  // fontFamily: ,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w100,
+                    color: TEXT_COLOR),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                '우리 둘이 두두!',
+                style: TextStyle(
+                    // fontFamily: ,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: TEXT_COLOR),
+              ),
+            ),
+
+
+            Spacer(),
             defaultTargetPlatform == TargetPlatform.android
-                ? ElevatedButton(
-                    onPressed: () async {
-                      UserCredential userCredential = await signInWithGoogle();
-                      if (userCredential.user?.email != null) {
-                        UserDomain.myself.email = userCredential.user!.email!;
-                      }
-                      if (userCredential.user?.displayName != null) {
-                        UserDomain.myself.name =
-                            userCredential.user!.displayName!;
-                      }
-                      if (userCredential.user?.photoURL != null) {
-                        UserDomain.myself.thumbnail =
-                            userCredential.user!.photoURL!;
-                      }
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (_) => RootTab()),
-                          (route) => false);
-                    },
-                    child: Image.asset('assets/images/google_login.png'))
+                ? SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black87,
+                            backgroundColor: Colors.white),
+                        onPressed: () async {
+                              await signInWithGoogle();
+                          // if (userCredential.user?.email != null) {
+                          //   UserDomain.myself.email =
+                          //       userCredential.user!.email!;
+                          // }
+                          // if (userCredential.user?.displayName != null) {
+                          //   UserDomain.myself.name =
+                          //       userCredential.user!.displayName!;
+                          // }
+                          // if (userCredential.user?.photoURL != null) {
+                          //   UserDomain.myself.thumbnail =
+                          //       userCredential.user!.photoURL!;
+                          // }
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(builder: (_) => RootTab()),
+                              (route) => false);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: Image.asset(
+                                    'assets/images/google_logo.png')),
+                            Text('     Sign in with Google', style: TextStyle(fontFamily: 'Robot'),)
+                          ],
+                        )),
+                  )
                 : SignInWithAppleButton(
                     onPressed: () async {
                       final appleCredential =
@@ -90,44 +133,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           AppleIDAuthorizationScopes.fullName,
                         ],
                       );
-                      final oauthCredential = OAuthProvider("apple.com").credential(
+                      final oauthCredential =
+                          OAuthProvider("apple.com").credential(
                         idToken: appleCredential.identityToken,
                         accessToken: appleCredential.authorizationCode,
                       );
 
-                      await FirebaseAuth.instance.signInWithCredential(oauthCredential);
-
-                      // updateAccount(); //실제 로그인/회원가입을 진행할 떄 필요한 코드를 작성하시면 됩니다.
-
+                      await FirebaseAuth.instance
+                          .signInWithCredential(oauthCredential);
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(builder: (_) => RootTab()),
                           (route) => false);
-                      // print(credential);
-
-                      // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
-                      // after they have been validated with Apple (see `Integration` section for more information on how to do this)
                     },
-                  )
-// :FloatingActionButton.extended(onPressed: (){}, label: Row(children: [Image.asset('assets/images/apple_logo.svg'), Icon(Icons.apple), Text('Apple로 로그인하기')]), backgroundColor: Colors.black,)
-//                 : ElevatedButton(
-//                     onPressed: () async {
-//                       UserCredential userCredential = await signInWithGoogle();
-//                       if (userCredential.user?.email != null) {
-//                         UserDomain.myself.email = userCredential.user!.email!;
-//                       }
-//                       if (userCredential.user?.displayName != null) {
-//                         UserDomain.myself.name =
-//                             userCredential.user!.displayName!;
-//                       }
-//                       if (userCredential.user?.photoURL != null) {
-//                         UserDomain.myself.thumbnail =
-//                             userCredential.user!.photoURL!;
-//                       }
-//                       Navigator.of(context).pushAndRemoveUntil(
-//                           MaterialPageRoute(builder: (_) => RootTab()),
-//                           (route) => false);
-//                     },
-//                     child: Text('login with apple')),
+                  ),
+            SizedBox(height: 50,)
           ],
         ),
       ),

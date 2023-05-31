@@ -7,14 +7,14 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:873377705460:android:4a12acb2ad169e723c5da1",
+        "mobilesdk_app_id": "1:873377705460:android:3e061dccd325b7b13c5da1",
         "android_client_info": {
           "package_name": "com.chaechae.dodo"
         }
       },
       "oauth_client": [
         {
-          "client_id": "873377705460-ncv151bt1tg91adm7h55nk4u72646lfh.apps.googleusercontent.com",
+          "client_id": "873377705460-m9fc1vo2elgn5oiorjfhf3e97mbgq8s0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,14 +27,14 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "873377705460-ncv151bt1tg91adm7h55nk4u72646lfh.apps.googleusercontent.com",
+              "client_id": "873377705460-m9fc1vo2elgn5oiorjfhf3e97mbgq8s0.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "873377705460-l673dhcccf786e8hpt6j456paee4e3b9.apps.googleusercontent.com",
+              "client_id": "873377705460-7ugge11c8s4mrcdih4i4vu770cplm7lm.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.johnny.couple-todo"
+                "bundle_id": "com.chaechae.dodo"
               }
             }
           ]

@@ -33,15 +33,21 @@ class _SplashViewState extends ConsumerState<SplashView> {
       if (user == null) {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => LoginScreen()),
-          (route) => false,
+              (route) => false,
         );
       } else {
-        firestore.collection('partnership').doc(FirebaseAuth.instance.currentUser!.email).snapshots().listen((event) {
+        firestore.collection('partnership').doc(
+            FirebaseAuth.instance.currentUser!.email).snapshots().listen((
+            event) {
           if (event.data() == null) {
             goRoot();
-            return ;
+            return;
           }
-          ref.read(partnerNotifierProvider.notifier).state = UserDomain(email: event.data()!['partnerEmail'], name: event.data()!['partnerName'], thumbnail: '');
+          ref
+              .read(partnerNotifierProvider.notifier)
+              .state = UserDomain(email: event.data()!['partnerEmail'],
+              name: event.data()!['partnerName'],
+              thumbnail: '');
           goRoot();
         });
       }
@@ -58,16 +64,22 @@ class _SplashViewState extends ConsumerState<SplashView> {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-        backgroundColor: PRIMARY_COLOR,
+        backgroundColor: Colors.white,
         child: SizedBox(
-          width: MediaQuery.of(context).size.width,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.ac_unit_outlined,
-                size: MediaQuery.of(context).size.width / 2,
-              ),
+              SizedBox(width: MediaQuery
+                  .of(context)
+                  .size
+                  .width / 2, height: MediaQuery
+                  .of(context)
+                  .size
+                  .width / 2, child: Image.asset('assets/images/logo.png')),
               SizedBox(
                 height: 16,
               ),
