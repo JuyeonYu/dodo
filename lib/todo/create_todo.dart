@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dodo/user/model/nickname_provider.dart';
 import 'package:dodo/user/model/partner_provider.dart';
 import 'package:dodo/user/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -122,7 +123,7 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                               selectedColor: PRIMARY_COLOR,
                               label: Text(index == 0
                                   ? '나'
-                                  : ref.read(partnerNotifierProvider)?.name ??
+                                  : ref.watch(partnerNotifierProvider)?.name ??
                                       '초대된 사람이 없습니다.',
                                 style: TextStyle(color: Colors.white),
                               ),

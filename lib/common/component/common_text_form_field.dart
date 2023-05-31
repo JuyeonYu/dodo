@@ -13,6 +13,7 @@ class CustomTextFormField extends StatelessWidget {
   final Color? backgroundColor;
   final Color? borderColor;
   final EdgeInsets? contentPadding;
+  final int? maxLength;
 
   const CustomTextFormField({
     required this.onChanged,
@@ -25,6 +26,7 @@ class CustomTextFormField extends StatelessWidget {
     this.backgroundColor,
     this.borderColor,
     this.contentPadding,
+    this.maxLength,
     Key? key,
   }) : super(key: key);
 
@@ -34,6 +36,7 @@ class CustomTextFormField extends StatelessWidget {
         borderSide:
             BorderSide(color: borderColor ?? INPUT_BORDER_COLOR, width: 1.0));
     return TextFormField(
+      maxLength: maxLength,
       initialValue: initialValue,
       cursorColor: showCursorColor ? PRIMARY_COLOR : Colors.transparent,
       obscureText: obscureText,

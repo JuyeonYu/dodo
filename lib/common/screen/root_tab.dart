@@ -4,6 +4,7 @@ import 'package:dodo/todo/create_todo.dart';
 import 'package:dodo/todo/search_todo.dart';
 import 'package:dodo/user/invite_buttons.dart';
 import 'package:dodo/user/login_screen.dart';
+import 'package:dodo/user/model/nickname_provider.dart';
 import 'package:dodo/user/model/partner_provider.dart';
 import 'package:dodo/user/more_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -102,16 +103,64 @@ class _RootTabState extends ConsumerState<RootTab>
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            UserAccountsDrawerHeader(
-              accountName:
-                  Text(FirebaseAuth.instance.currentUser?.displayName ?? ''),
-              accountEmail:
-                  Text(FirebaseAuth.instance.currentUser?.email ?? ''),
+            DrawerHeader(
               decoration: BoxDecoration(
-                  color: PRIMARY_COLOR,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(40.0),
-                      bottomRight: Radius.circular(40.0))),
+                color: PRIMARY_COLOR,
+              ),
+              child: Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            ref.watch(nicknameProvider) ?? '설정된 닉네임이 없습니다.',
+                            style: TextStyle(color: Colors.white, fontSize: 25),
+                          ),
+                          IconButton(
+                            onPressed: () async {
+                              String? enteredText = await showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return TextInputDialog(
+                                      title: '닉네임 설정(최대 8자)',
+                                      hint: '닉네임을 입력해주세요(최대 8자)',
+                                      maxLength: 8,
+                                    );
+                                  });
+                              if (enteredText == null) {
+                                return;
+                              }
+                              ref.read(nicknameProvider.notifier).state =
+                                  enteredText;
+
+                              firestore
+                                  .collection('user')
+                                  .doc(
+                                      FirebaseAuth.instance.currentUser!.email!)
+                                  .set({
+                                'nickname': enteredText.replaceAll(' ', '')
+                              });
+                            },
+                            icon: Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                              size: MediaQuery.of(context).size.height * 0.037,
+                            ),
+                          )
+                        ],
+                      ),
+                      Container(
+                        child: Text(
+                          FirebaseAuth.instance.currentUser?.email ?? '',
+                          style: TextStyle(color: TEXT_COLOR),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
             ListTile(
               title: Text('같이 하는 사람'),
@@ -131,7 +180,6 @@ class _RootTabState extends ConsumerState<RootTab>
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            // Text('${data['partnerName']}(${data['partnerEmail']}}'),
                             Text('${state?.name}(${state?.email}}'),
                             ElevatedButton(
                               onPressed: () {

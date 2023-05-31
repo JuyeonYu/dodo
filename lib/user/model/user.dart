@@ -8,6 +8,7 @@ class UserDomain {
     required this.name,
     required this.thumbnail,
   });
+
   static var myself = UserDomain(email: '', name: '', thumbnail: '');
   static UserDomain? partner;
 }

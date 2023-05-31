@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:dodo/common/const/data.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
@@ -24,4 +26,16 @@ String generateShortHashFromUUID() {
   final shortHash = hash.substring(0, 6); // 첫 6글자 추출
 
   return shortHash;
+}
+
+Future<String?> getNickName() async {
+  String? email = FirebaseAuth.instance.currentUser?.email;
+  if (email == null) {
+    return null;
+  }
+  Map<String, dynamic>? data = (await firestore.collection('user')
+      .doc(email!)
+      .get()).data();
+  String? nickname = data?['nickname'];
+  return nickname;
 }

@@ -3,6 +3,7 @@ import 'package:dodo/user/model/partner_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 // import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -22,6 +23,7 @@ class InviteButtons extends ConsumerStatefulWidget {
 
 class _InviteButtonsState extends ConsumerState<InviteButtons> {
   bool inInvitated = false;
+
   // AdManagerInterstitialAd? _interstitialAd;
 
   @override
@@ -79,7 +81,8 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                               Share.share('두두 초대 코드: $shareCode');
                             },
                             child: const Text('공유'),
-                            style: TextButton.styleFrom(foregroundColor: PRIMARY_COLOR),
+                            style: TextButton.styleFrom(
+                                foregroundColor: PRIMARY_COLOR),
                           ),
                         ]);
                   });
@@ -93,8 +96,9 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                   context: context,
                   builder: (BuildContext context) {
                     return TextInputDialog(
-                      title: '초대코드',
+                      title: '초대코드(최대 6자)',
                       hint: '초대코드를 입력해주세요(숫자, 소문자)',
+                      maxLength: 6,
                     );
                   });
 
@@ -168,10 +172,12 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                             .currentUser?.displayName ??
                                         '',
                                   });
-                                  ref.read(partnerNotifierProvider.notifier).setPartner(UserDomain(
-                                      email: hostEmail,
-                                      name: hostName,
-                                      thumbnail: ''));
+                                  ref
+                                      .read(partnerNotifierProvider.notifier)
+                                      .setPartner(UserDomain(
+                                          email: hostEmail,
+                                          name: hostName,
+                                          thumbnail: ''));
                                   // Navigator.pop(context);
                                   Navigator.of(context).pop();
                                 },

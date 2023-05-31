@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 class TextInputDialog extends StatefulWidget {
   final String title;
   final String hint;
+  final int maxLength;
 
   const TextInputDialog({
     required this.title,
     required this.hint,
+    required this.maxLength,
     Key? key,
   }) : super(key: key);
 
@@ -17,6 +19,7 @@ class TextInputDialog extends StatefulWidget {
 }
 
 class _TextInputDialogState extends State<TextInputDialog> {
+  bool isEmpty = true;
   TextEditingController _textEditingController = TextEditingController();
 
   @override
@@ -33,21 +36,26 @@ class _TextInputDialogState extends State<TextInputDialog> {
         onChanged: (String value) {
           setState(() {
             _textEditingController.text = value;
+            isEmpty = value.isEmpty;
           });
         },
         hintText: '',
         borderColor: PRIMARY_COLOR,
         autofocus: true,
+        maxLength: widget.maxLength,
       ),
       actions: [
         TextButton(
           onPressed: () {
             String enteredText = _textEditingController.text;
+            if (enteredText.isEmpty) {
+              return;
+            }
             Navigator.of(context).pop(enteredText);
           },
           child: Text(
             '확인',
-            style: TextStyle(color: PRIMARY_COLOR),
+            style: TextStyle(color: isEmpty ? BACKGROUND_COLOR : PRIMARY_COLOR),
           ),
         ),
         TextButton(
