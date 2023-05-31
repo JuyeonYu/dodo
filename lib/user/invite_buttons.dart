@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dodo/user/help.dart';
+import 'package:dodo/user/model/nickname_provider.dart';
 import 'package:dodo/user/model/partner_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +59,10 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
         ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             onPressed: () {
+              if (ref.read(nicknameProvider) == null || ref.read(nicknameProvider)!.isEmpty) {
+                showSetNicknameSnackBar(context);
+                return;
+              }
               String shareCode = generateShortHashFromUUID();
               firestore
                   .collection('invitation')
@@ -92,6 +98,10 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
             style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             onPressed: () async {
               // _interstitialAd?.show();
+              if (ref.read(nicknameProvider) == null || ref.read(nicknameProvider)!.isEmpty) {
+                showSetNicknameSnackBar(context);
+                return;
+              }
               String? enteredText = await showDialog<String>(
                   context: context,
                   builder: (BuildContext context) {
@@ -149,11 +159,8 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                               ),
                               TextButton(
                                 onPressed: () async {
-                                  // setState(() {
-                                  //   inInvitated = true;
-                                  // });
                                   await firestore
-                                      .collection('partnership')
+                                      .collection('user')
                                       .doc(FirebaseAuth
                                               .instance.currentUser?.email ??
                                           '')
@@ -162,7 +169,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                     'partnerName': hostName,
                                   });
                                   await firestore
-                                      .collection('partnership')
+                                      .collection('user')
                                       .doc(hostEmail)
                                       .set({
                                     'partnerEmail': FirebaseAuth
@@ -224,5 +231,18 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
             child: inInvitated ? CircularProgressIndicator() : Text('초대받기')),
       ],
     );
+  }
+
+  void showSetNicknameSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Text('닉네임 설정이 필요합니다.'),
+      action: SnackBarAction(
+        textColor: PRIMARY_COLOR,
+        label: '닉네임 설정',
+        onPressed: () {
+          setNickname(context, ref);
+        },
+      ),
+    ));
   }
 }

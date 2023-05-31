@@ -1,6 +1,7 @@
 import 'package:dodo/common/default_layout.dart';
 import 'package:dodo/common/screen/root_tab.dart';
 import 'package:dodo/common/util/helper.dart';
+import 'package:dodo/user/help.dart';
 import 'package:dodo/user/model/nickname_provider.dart';
 import 'package:dodo/user/model/partner_provider.dart';
 import 'package:dodo/user/model/user.dart';
@@ -34,20 +35,7 @@ class _SplashViewState extends ConsumerState<SplashView> {
   void checkToken() async {
     String? nickname = await getNickName();
     if (nickname == null || nickname.isEmpty) {
-      String? enteredText = await showDialog<String>(
-          context: context,
-          builder: (BuildContext context) {
-            return TextInputDialog(
-              title: '닉네임 설정',
-              hint: '닉네임을 설정해주세요 (최대 8자)',
-              maxLength: 8,
-            );
-          });
-      ref.read(nicknameProvider.notifier).state = enteredText;
-      firestore
-          .collection('user')
-          .doc(FirebaseAuth.instance.currentUser!.email!)
-          .set({'nickname': enteredText});
+      await setNickname(context, ref);
     } else {
       String? nickname = (await firestore
               .collection('user')
@@ -65,7 +53,7 @@ class _SplashViewState extends ConsumerState<SplashView> {
         );
       } else {
         firestore
-            .collection('partnership')
+            .collection('user')
             .doc(FirebaseAuth.instance.currentUser!.email)
             .snapshots()
             .listen((event) {

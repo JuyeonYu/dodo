@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dodo/common/const/data.dart';
 import 'package:dodo/todo/create_todo.dart';
 import 'package:dodo/todo/search_todo.dart';
+import 'package:dodo/user/help.dart';
 import 'package:dodo/user/invite_buttons.dart';
 import 'package:dodo/user/login_screen.dart';
 import 'package:dodo/user/model/nickname_provider.dart';
@@ -116,32 +117,12 @@ class _RootTabState extends ConsumerState<RootTab>
                         children: [
                           Text(
                             ref.watch(nicknameProvider) ?? '설정된 닉네임이 없습니다.',
-                            style: TextStyle(color: Colors.white, fontSize: 25),
+                            style: TextStyle(color: Colors.white, fontSize:ref.watch(nicknameProvider) == null ? 15 : 25),
+                            maxLines: 2,
                           ),
                           IconButton(
                             onPressed: () async {
-                              String? enteredText = await showDialog<String>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return TextInputDialog(
-                                      title: '닉네임 설정(최대 8자)',
-                                      hint: '닉네임을 입력해주세요(최대 8자)',
-                                      maxLength: 8,
-                                    );
-                                  });
-                              if (enteredText == null) {
-                                return;
-                              }
-                              ref.read(nicknameProvider.notifier).state =
-                                  enteredText;
-
-                              firestore
-                                  .collection('user')
-                                  .doc(
-                                      FirebaseAuth.instance.currentUser!.email!)
-                                  .set({
-                                'nickname': enteredText.replaceAll(' ', '')
-                              });
+                              await setNickname(context, ref);
                             },
                             icon: Icon(
                               Icons.edit,
@@ -169,7 +150,7 @@ class _RootTabState extends ConsumerState<RootTab>
                 children: [
                   StreamBuilder<DocumentSnapshot>(
                     stream: firestore
-                        .collection('partnership')
+                        .collection('user')
                         .doc(FirebaseAuth.instance.currentUser?.email ?? '')
                         .snapshots(), // 구독할 스트림을 지정
                     builder: (BuildContext context,
@@ -194,7 +175,7 @@ class _RootTabState extends ConsumerState<RootTab>
                                             TextButton(
                                               onPressed: () async {
                                                 await firestore
-                                                    .collection('partnership')
+                                                    .collection('user')
                                                     .doc(FirebaseAuth
                                                             .instance
                                                             .currentUser
@@ -202,7 +183,7 @@ class _RootTabState extends ConsumerState<RootTab>
                                                         '')
                                                     .delete();
                                                 await firestore
-                                                    .collection('partnership')
+                                                    .collection('user')
                                                     .doc(ref
                                                             .read(
                                                                 partnerNotifierProvider)
