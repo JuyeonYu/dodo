@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dodo/common/const/colors.dart';
 import 'package:dodo/common/splash.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +26,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          checkboxTheme: CheckboxThemeData(fillColor: MaterialStatePropertyAll(PRIMARY_COLOR)),
+          checkboxTheme: CheckboxThemeData(
+              fillColor: MaterialStatePropertyAll(PRIMARY_COLOR)),
           fontFamily: 'Pretendard',
           primarySwatch: Colors.blue,
         ),

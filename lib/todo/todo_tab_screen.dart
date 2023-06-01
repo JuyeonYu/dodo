@@ -1,6 +1,7 @@
 import 'package:dodo/common/const/colors.dart';
 import 'package:dodo/common/default_layout.dart';
 import 'package:dodo/todo/todo_screen.dart';
+import 'package:dodo/user/help.dart';
 import 'package:dodo/user/model/partner_provider.dart';
 import 'package:dodo/user/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,15 +17,24 @@ class TodoTabScreen extends ConsumerStatefulWidget {
 
 class _TodoTabScreenState extends ConsumerState<TodoTabScreen>
     with TickerProviderStateMixin {
-  TabController? _tabController;
+  late TabController _tabController;
+  int tabIndex = 0;
 
   @override
   void initState() {
+
+    super.initState();
     _tabController = TabController(
       length: 2,
       vsync: this,
     );
-    super.initState();
+    // resetPartner(ref);
+    _tabController.addListener(() {
+      // resetPartner(ref);
+      setState(() {
+        tabIndex = _tabController.index;
+      });
+    });
   }
 
   @override

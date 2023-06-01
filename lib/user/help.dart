@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../common/component/text_input_dialog.dart';
 import '../common/const/data.dart';
 import 'model/nickname_provider.dart';
+import 'model/partner_provider.dart';
+import 'model/user.dart';
 
 Future<void> setNickname(BuildContext context, WidgetRef ref) async {
   String? enteredText = await showDialog<String>(
@@ -21,4 +23,21 @@ Future<void> setNickname(BuildContext context, WidgetRef ref) async {
       .collection('user')
       .doc(FirebaseAuth.instance.currentUser!.email!)
       .set({'nickname': enteredText});
+}
+
+Future<Map<String, dynamic>?> resetPartner(WidgetRef ref) async {
+  Map<String, dynamic>? json = (await firestore
+          .collection('user')
+          .doc(FirebaseAuth.instance.currentUser?.email ?? '')
+          .get())
+      .data();
+  if (json?['partnerEmail'] == null) {
+    ref.read(partnerNotifierProvider.notifier).state = null;
+  } else {
+    ref.read(partnerNotifierProvider.notifier).state = UserDomain(
+        email: json!['partnerEmail'],
+        name: json?['partnerName'] ?? '',
+        thumbnail: '');
+  }
+  return json;
 }

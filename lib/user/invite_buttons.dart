@@ -155,7 +155,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                       });
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text('아니오'),
+                                child: const Text('아니오', style: TextStyle(color: BACKGROUND_COLOR),),
                               ),
                               TextButton(
                                 onPressed: () async {
@@ -164,20 +164,18 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                       .doc(FirebaseAuth
                                               .instance.currentUser?.email ??
                                           '')
-                                      .set({
+                                      .update({
                                     'partnerEmail': hostEmail,
                                     'partnerName': hostName,
                                   });
                                   await firestore
                                       .collection('user')
                                       .doc(hostEmail)
-                                      .set({
+                                      .update({
                                     'partnerEmail': FirebaseAuth
                                             .instance.currentUser?.email ??
                                         '',
-                                    'partnerName': FirebaseAuth.instance
-                                            .currentUser?.displayName ??
-                                        '',
+                                    'partnerName': ref.read(nicknameProvider),
                                   });
                                   ref
                                       .read(partnerNotifierProvider.notifier)
@@ -187,8 +185,11 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                           thumbnail: ''));
                                   // Navigator.pop(context);
                                   Navigator.of(context).pop();
+                                  setState(() {
+
+                                  });
                                 },
-                                child: const Text('네'),
+                                child: const Text('네', style: TextStyle(color: PRIMARY_COLOR),),
                               ),
                             ]);
                       });

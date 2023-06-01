@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dodo/common/component/custom_drawer.dart';
 import 'package:dodo/common/const/data.dart';
 import 'package:dodo/todo/create_todo.dart';
 import 'package:dodo/todo/search_todo.dart';
@@ -35,7 +36,7 @@ class RootTab extends ConsumerStatefulWidget {
 
 class _RootTabState extends ConsumerState<RootTab>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  late TabController controller;
+  TabController? controller;
   int index = 0;
   bool inSignout = false;
   bool inInvitated = false;
@@ -48,22 +49,22 @@ class _RootTabState extends ConsumerState<RootTab>
   void initState() {
     super.initState();
     controller = TabController(length: 2, vsync: this);
-    controller.addListener(() {
+    controller!.addListener(() {
       setState(() {
-        index = controller.index;
+        index = controller!.index;
       });
     });
   }
 
   @override
   void dispose() {
-    controller.removeListener(tabListener);
+    controller!.removeListener(tabListener);
     super.dispose();
   }
 
   void tabListener() {
     setState(() {
-      index = controller.index;
+      index = controller!.index;
     });
   }
 
@@ -81,7 +82,7 @@ class _RootTabState extends ConsumerState<RootTab>
                       todo: Todo(
                         userId: index == 0
                             ? FirebaseAuth.instance.currentUser!.email!
-                            : ref.read(partnerNotifierProvider)?.email ?? '',
+                            : state?.email ?? '',
                         title: '',
                         isMine: index == 0,
                         isDone: false,
@@ -92,181 +93,14 @@ class _RootTabState extends ConsumerState<RootTab>
                     )),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
+      drawer: CustomDrawer(),
       child: TabBarView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         controller: controller,
-        children: [TodoTabScreen()],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: PRIMARY_COLOR,
-              ),
-              child: Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            ref.watch(nicknameProvider) ?? '설정된 닉네임이 없습니다.',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: ref.watch(nicknameProvider) == null
-                                    ? 15
-                                    : 25),
-                            maxLines: 2,
-                          ),
-                          IconButton(
-                            onPressed: () async {
-                              await setNickname(context, ref);
-                            },
-                            icon: Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                              size: MediaQuery.of(context).size.height * 0.037,
-                            ),
-                          )
-                        ],
-                      ),
-                      Container(
-                        child: Text(
-                          FirebaseAuth.instance.currentUser?.email ?? '',
-                          style: TextStyle(color: TEXT_COLOR),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              title: Text('같이 하는 사람'),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  StreamBuilder<DocumentSnapshot>(
-                    stream: firestore
-                        .collection('user')
-                        .doc(FirebaseAuth.instance.currentUser?.email ?? '')
-                        .snapshots(), // 구독할 스트림을 지정
-                    builder: (BuildContext context,
-                        AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      Map<String, dynamic> data =
-                          snapshot.data?.data() as Map<String, dynamic>;
-                      if (data['partnerEmail'] != null) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text('${state?.name}(${state?.email}}'),
-                            ElevatedButton(
-                              onPressed: () {
-                                showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                          title: Text('알림'),
-                                          content: const Text(
-                                              '상대방의 할일 목록이 모두 사라집니다. 그래도 진행할까요?'),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () async {
-                                                await firestore
-                                                    .collection('user')
-                                                    .doc(FirebaseAuth
-                                                            .instance
-                                                            .currentUser
-                                                            ?.email ??
-                                                        '')
-                                                    .delete();
-                                                await firestore
-                                                    .collection('user')
-                                                    .doc(ref
-                                                            .read(
-                                                                partnerNotifierProvider)
-                                                            ?.email ??
-                                                        '')
-                                                    .delete();
-                                                ref
-                                                    .read(
-                                                        partnerNotifierProvider
-                                                            .notifier)
-                                                    .delete();
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('공유 중단'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('취소'),
-                                            ),
-                                          ]);
-                                    });
-                              },
-                              child: Text('공유 중단'),
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: BACKGROUND_COLOR),
-                            ),
-                          ],
-                        );
-                      } else if (snapshot.hasError) {
-                        // 에러가 발생한 경우 UI 업데이트
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        // 데이터가 없는 경우 UI 업데이트
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text('초대된 사람이 없습니다.'),
-                          ],
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-              onTap: () {
-                print('Setting is clicked');
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.question_mark_outlined,
-                color: Colors.grey[850],
-              ),
-              title: Text('문의하기'),
-              onTap: () {
-                FlutterEmailSender.send(Email(
-                    subject: '[dodo 문의]', recipients: ['remake382@gmail.com']));
-              },
-            ),
-            ListTile(
-                leading: Icon(
-                  Icons.logout,
-                  color: Colors.grey[850],
-                ),
-                title: Text('로그아웃'),
-                onTap: () async {
-                  setState(() {
-                    inSignout = true;
-                  });
-                  FirebaseAuth.instance.signOut();
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (_) => LoginScreen()),
-                      (route) => false);
-                },
-                trailing: inSignout ? CircularProgressIndicator() : null),
-          ],
-        ),
-      ),
+        children: const [TodoTabScreen()],
+      )
     );
   }
 }

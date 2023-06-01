@@ -4,7 +4,10 @@ import 'package:dodo/common/const/data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
+import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../main.dart';
 
 Color hexToColor(String hexCode) {
   String hex = hexCode.replaceAll('#', '');
@@ -38,4 +41,9 @@ Future<String?> getNickName() async {
       .get()).data();
   String? nickname = data?['nickname'];
   return nickname;
+}
+
+void restartApp() {
+  SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+  runApp(const MyApp());
 }

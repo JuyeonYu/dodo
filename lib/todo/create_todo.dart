@@ -40,6 +40,24 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
     setState(() {
       _isSaving = true;
     });
+    Map<String, dynamic>? userJson = (await firestore
+        .collection('user')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .get()).data();
+    String? serverPartnerEmail = userJson?['partnerEmail'];
+    String? clientPartnerEmail = ref.read(partnerNotifierProvider)?.email;
+
+    if (serverPartnerEmail != clientPartnerEmail) {
+      ref.read(partnerNotifierProvider.notifier).state = UserDomain(
+          email: userJson?['partnerEmail'],
+          name: userJson?['partnerName'] ?? '',
+          thumbnail: '');
+      setState(() {
+        _isSaving = false;
+      });
+      Navigator.pop(context);
+      return;
+    }
 
     if (_isEditing) {
       firestore

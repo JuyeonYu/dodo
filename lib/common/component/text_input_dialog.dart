@@ -47,6 +47,15 @@ class _TextInputDialogState extends State<TextInputDialog> {
       actions: [
         TextButton(
           onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text(
+            '취소',
+            style: TextStyle(color: BACKGROUND_COLOR),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
             String enteredText = _textEditingController.text;
             if (enteredText.isEmpty) {
               return;
@@ -56,15 +65,6 @@ class _TextInputDialogState extends State<TextInputDialog> {
           child: Text(
             '확인',
             style: TextStyle(color: isEmpty ? BACKGROUND_COLOR : PRIMARY_COLOR),
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text(
-            '취소',
-            style: TextStyle(color: BACKGROUND_COLOR),
           ),
         ),
       ],
