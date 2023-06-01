@@ -45,6 +45,7 @@ class _TodoTabScreenState extends ConsumerState<TodoTabScreen>
 
   @override
   Widget build(BuildContext context) {
+    var state = ref.watch(partnerNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         bottom: PreferredSize(
@@ -64,7 +65,7 @@ class _TodoTabScreenState extends ConsumerState<TodoTabScreen>
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8),
-                      child: ref.watch(partnerNotifierProvider.notifier).state == null ? Text('초대된 친구가 없습니다.') : Text(ref.watch(partnerNotifierProvider)!.name),
+                      child: state == null ? Text('초대된 친구가 없습니다.') : Text(ref.watch(partnerNotifierProvider)!.name),
                     ),
                   ],
                   controller: _tabController),

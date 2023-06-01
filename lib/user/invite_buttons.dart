@@ -183,11 +183,11 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                           email: hostEmail,
                                           name: hostName,
                                           thumbnail: ''));
-                                  // Navigator.pop(context);
-                                  Navigator.of(context).pop();
-                                  setState(() {
-
-                                  });
+                                  Navigator.pop(context);
+                                  // Navigator.of(context).pop();
+                                  // setState(() {
+                                  //
+                                  // });
                                 },
                                 child: const Text('네', style: TextStyle(color: PRIMARY_COLOR),),
                               ),
