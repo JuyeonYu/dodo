@@ -34,9 +34,15 @@ Future<Map<String, dynamic>?> resetPartner(WidgetRef ref) async {
   if (json?['partnerEmail'] == null) {
     ref.read(partnerNotifierProvider.notifier).state = null;
   } else {
+    String yourEmail = json!['partnerEmail'];
+    Map<String, dynamic>? yourUserInfoJson = (await firestore
+        .collection('user')
+        .doc(yourEmail)
+        .get())
+        .data();
     ref.read(partnerNotifierProvider.notifier).state = UserDomain(
-        email: json!['partnerEmail'],
-        name: json?['partnerName'] ?? '',
+        email: yourEmail,
+        name: yourUserInfoJson?['nickname'] ?? '',
         thumbnail: '');
   }
   return json;

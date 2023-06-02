@@ -41,21 +41,28 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
       _isSaving = true;
     });
     Map<String, dynamic>? userJson = (await firestore
-        .collection('user')
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .get()).data();
+            .collection('user')
+            .doc(FirebaseAuth.instance.currentUser!.email)
+            .get())
+        .data();
     String? serverPartnerEmail = userJson?['partnerEmail'];
-    String? clientPartnerEmail = ref.read(partnerNotifierProvider)?.email;
 
-    if (serverPartnerEmail != clientPartnerEmail) {
-      ref.read(partnerNotifierProvider.notifier).state = UserDomain(
-          email: userJson?['partnerEmail'],
-          name: userJson?['partnerName'] ?? '',
-          thumbnail: '');
+    if (serverPartnerEmail == null && !widget.todo.isMine) {
+      ref.read(partnerNotifierProvider.notifier).state = null;
       setState(() {
         _isSaving = false;
       });
-      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Text('상대방 정보가 없습니다. 상대방이 공유 중단했습니다.'),
+        action: SnackBarAction(
+          textColor: PRIMARY_COLOR,
+          label: '나가기',
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ));
+      // Navigator.pop(context);
       return;
     }
 
@@ -139,22 +146,30 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                             return ChoiceChip(
                               backgroundColor: BACKGROUND_COLOR,
                               selectedColor: PRIMARY_COLOR,
-                              label: Text(index == 0
-                                  ? '나'
-                                  : ref.watch(partnerNotifierProvider)?.name ??
-                                      '초대된 사람이 없습니다.',
+                              label: Text(
+                                index == 0
+                                    ? '나'
+                                    : ref
+                                            .watch(partnerNotifierProvider)
+                                            ?.name ??
+                                        '초대된 사람이 없습니다.',
                                 style: TextStyle(color: Colors.white),
                               ),
                               selected: isMine,
                               onSelected: (bool selected) {
-                                if (ref.read(partnerNotifierProvider.notifier).state == null) {
+                                if (ref
+                                        .read(partnerNotifierProvider.notifier)
+                                        .state ==
+                                    null) {
                                   return;
                                 }
                                 setState(() {
                                   widget.todo.isMine = index == 0 && selected;
                                   widget.todo.userId = ((index == 0 && selected)
                                       ? FirebaseAuth.instance.currentUser!.email
-                                      : ref.read(partnerNotifierProvider)?.email)!;
+                                      : ref
+                                          .read(partnerNotifierProvider)
+                                          ?.email)!;
                                 });
                               },
                             );

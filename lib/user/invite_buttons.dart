@@ -166,7 +166,6 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                           '')
                                       .update({
                                     'partnerEmail': hostEmail,
-                                    'partnerName': hostName,
                                   });
                                   await firestore
                                       .collection('user')
@@ -175,7 +174,6 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                     'partnerEmail': FirebaseAuth
                                             .instance.currentUser?.email ??
                                         '',
-                                    'partnerName': ref.read(nicknameProvider),
                                   });
                                   ref
                                       .read(partnerNotifierProvider.notifier)

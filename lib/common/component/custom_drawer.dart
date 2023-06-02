@@ -128,7 +128,6 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                                                       '')
                                                   .update({
                                                 'partnerEmail': null,
-                                                'partnerName': null
                                               });
                                               print(ref
                                                       .read(
@@ -144,7 +143,6 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                                                       '')
                                                   .update({
                                                 'partnerEmail': null,
-                                                'partnerName': null
                                               });
                                               ref
                                                   .read(partnerNotifierProvider
