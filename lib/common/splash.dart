@@ -33,6 +33,13 @@ class _SplashViewState extends ConsumerState<SplashView> {
   }
 
   void checkToken() async {
+    if (FirebaseAuth.instance.currentUser == null) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+            (route) => false,
+      );
+      return;
+    }
     Map<String, dynamic>? json = (await firestore
         .collection('user')
         .doc(FirebaseAuth.instance.currentUser!.email!)
