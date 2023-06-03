@@ -71,36 +71,44 @@ class _RootTabState extends ConsumerState<RootTab>
   Widget build(BuildContext context) {
     final state = ref.watch(partnerNotifierProvider);
     return DefaultLayout(
-      title: '두두',
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: PRIMARY_COLOR,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CreateTodo(
-                      todo: Todo(
-                        userId: index == 0
-                            ? FirebaseAuth.instance.currentUser!.email!
-                            : state?.email ?? '',
-                        title: '',
-                        isMine: index == 0,
-                        isDone: false,
-                        type: 0,
-                        timestamp: Timestamp.now(),
-                        content: '',
-                      ),
-                    )),
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
-      drawer: CustomDrawer(),
-      child: TabBarView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: controller,
-        children: const [TodoTabScreen()],
-      )
-    );
+        title: '두두',
+        bottomNavigationBar: BottomAppBar(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CreateTodo(
+                                  todo: Todo(
+                                    userId: index == 0
+                                        ? FirebaseAuth
+                                            .instance.currentUser!.email!
+                                        : state?.email ?? '',
+                                    title: '',
+                                    isMine: index == 0,
+                                    isDone: false,
+                                    type: 0,
+                                    timestamp: Timestamp.now(),
+                                    content: '',
+                                  ),
+                                )),
+                      );
+                    },
+                    child: Text('할 일 추가', style: TextStyle(color: PRIMARY_COLOR),)),
+              ),
+            ],
+          ),
+        ),
+        drawer: CustomDrawer(),
+        child: TabBarView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: controller,
+          children: const [TodoTabScreen()],
+        ));
   }
 }

@@ -49,9 +49,6 @@ class Helper {
                     selectedColor: BODY_TEXT_COLOR,
                     selectedTileColor: Colors.white10,
                     onTap: () {
-                      if (todo.isDone) {
-                        return;
-                      }
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -68,14 +65,64 @@ class Helper {
                     title: Text(todo.title),
                     trailing: isSearching
                         ? null
-                        : Checkbox(
-                            value: todo.isDone,
-                            onChanged: (value) {
-                              firestore.collection('todo').doc(todo.id).update({
-                                'isDone': !todo.isDone,
-                                'timestamp': Timestamp.now()
-                              });
-                            },
+                        : Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              todo.isDone
+                                  ? IconButton(
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text('알림'),
+                                                content: Text(
+                                                    '삭제할까요?\n공유한 상대방도 할 일이 삭제됩니다.'),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text(
+                                                        '취소',
+                                                        style: TextStyle(
+                                                            color: TEXT_COLOR),
+                                                      )),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        firestore
+                                                            .collection('todo')
+                                                            .doc(todo.id)
+                                                            .delete();
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text(
+                                                        '삭제',
+                                                        style: TextStyle(
+                                                            color: POINT_COLOR),
+                                                      ))
+                                                ],
+                                              );
+                                            });
+                                      },
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: POINT_COLOR,
+                                      ))
+                                  : Container(),
+                              Checkbox(
+                                value: todo.isDone,
+                                onChanged: (value) {
+                                  firestore
+                                      .collection('todo')
+                                      .doc(todo.id)
+                                      .update({
+                                    'isDone': !todo.isDone,
+                                    'timestamp': Timestamp.now()
+                                  });
+                                },
+                              ),
+                            ],
                           ),
                   );
                 },
@@ -83,82 +130,4 @@ class Helper {
       ],
     );
   }
-}
-
-Widget _buildSection(String sectionName, List<DocumentSnapshot> todos) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Text(
-              sectionName,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            sectionName == 'Pending'
-                ? Spacer()
-                : Tooltip(
-                    message: '완료 시점 기준 내일 자동으로 사라집니다.',
-                    triggerMode: TooltipTriggerMode.tap,
-                    child: Icon(Icons.info),
-                  )
-          ],
-        ),
-      ),
-      sectionName == 'Pending' && todos.isEmpty
-          ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('할 일이 없는 날입니다. 사랑한다고 말해볼까요?'),
-            )
-          : ListView.builder(
-              shrinkWrap: true,
-              physics: ClampingScrollPhysics(),
-              itemCount: todos.length,
-              itemBuilder: (context, index) {
-                DocumentSnapshot doc = todos[index];
-
-                Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-                Todo todo = Todo.fromJson(data);
-                todo.id = doc.id;
-                return ListTile(
-                  selected: todo.isDone,
-                  selectedColor: BODY_TEXT_COLOR,
-                  selectedTileColor: Colors.white10,
-                  onTap: () {
-                    if (todo.isDone) {
-                      return;
-                    }
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CreateTodo(
-                                  todo: todo,
-                                )));
-                  },
-                  leading: Container(
-                      color: labelColors[todo.type],
-                      child: SizedBox(
-                        width: 10,
-                        height: 500,
-                      )),
-                  title: Text(todo.title),
-                  trailing: Checkbox(
-                    value: todo.isDone,
-                    onChanged: (value) {
-                      firestore.collection('todo').doc(todo.id).update({
-                        'isDone': !todo.isDone,
-                        'timestamp': Timestamp.now()
-                      });
-                    },
-                  ),
-                );
-              },
-            ),
-    ],
-  );
 }

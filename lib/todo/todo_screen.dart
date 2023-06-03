@@ -23,7 +23,8 @@ class TodoScreen extends ConsumerStatefulWidget {
 class _TodoScreenState extends ConsumerState<TodoScreen> {
   @override
   Widget build(BuildContext context) {
-    if (!widget.isMine && ref.watch(partnerNotifierProvider.notifier).state == null) {
+    if (!widget.isMine &&
+        ref.watch(partnerNotifierProvider.notifier).state == null) {
       return Center(
         child: SingleChildScrollView(
           child: Column(
@@ -39,136 +40,102 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
       );
     }
     return StreamBuilder<QuerySnapshot>(
-      stream: firestore
-          .collection('todo')
-          .where('userId',
-              isEqualTo: widget.isMine
-                  ? FirebaseAuth.instance.currentUser!.email
-                  : ref.watch(partnerNotifierProvider)!.email)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        List<DocumentSnapshot> todoDocs = snapshot.data!.docs;
-        List<DocumentSnapshot> completedTodos = [];
-        List<DocumentSnapshot> pendingTodos = [];
-        for (var doc in todoDocs) {
-          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-          bool isDone = data['isDone'];
-          if (isDone) {
-            completedTodos.add(doc);
-          } else {
-            pendingTodos.add(doc);
-          }
-        }
-        pendingTodos.sort((a, b) {
-          // 1차 정렬: type 오름차순
-          Todo aTodo = Todo.fromJson(a.data() as Map<String, dynamic>);
-          Todo bTodo = Todo.fromJson(b.data() as Map<String, dynamic>);
-          int typeComparison = bTodo.type.compareTo(aTodo.type);
-          if (typeComparison != 0) {
-            return typeComparison;
+        stream: firestore
+            .collection('todo')
+            .where('userId',
+                isEqualTo: widget.isMine
+                    ? FirebaseAuth.instance.currentUser!.email
+                    : ref.watch(partnerNotifierProvider)!.email)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
-          // 2차 정렬: timestamp 오름차순
-          return bTodo.timestamp.compareTo(aTodo.timestamp);
-        });
-
-        completedTodos.sort((a, b) {
-          // 1차 정렬: type 오름차순
-          Todo aTodo = Todo.fromJson(a.data() as Map<String, dynamic>);
-          Todo bTodo = Todo.fromJson(b.data() as Map<String, dynamic>);
-          int typeComparison = bTodo.type.compareTo(aTodo.type);
-          if (typeComparison != 0) {
-            return typeComparison;
+          List<DocumentSnapshot> todoDocs = snapshot.data!.docs;
+          List<DocumentSnapshot> completedTodos = [];
+          List<DocumentSnapshot> pendingTodos = [];
+          for (var doc in todoDocs) {
+            Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+            bool isDone = data['isDone'];
+            if (isDone) {
+              completedTodos.add(doc);
+            } else {
+              pendingTodos.add(doc);
+            }
           }
+          pendingTodos.sort((a, b) {
+            // 1차 정렬: type 오름차순
+            Todo aTodo = Todo.fromJson(a.data() as Map<String, dynamic>);
+            Todo bTodo = Todo.fromJson(b.data() as Map<String, dynamic>);
+            int typeComparison = bTodo.type.compareTo(aTodo.type);
+            if (typeComparison != 0) {
+              return typeComparison;
+            }
 
-          // 2차 정렬: timestamp 오름차순
-          return bTodo.timestamp.compareTo(aTodo.timestamp);
-        });
-        return ListView(
-          children: [
-            Helper.BuildSection('진행중', pendingTodos),
-            Helper.BuildSection('완료됨', completedTodos),
-          ],
-        );
-      },
-    );
-  }
+            // 2차 정렬: timestamp 오름차순
+            return bTodo.timestamp.compareTo(aTodo.timestamp);
+          });
 
-  Widget _buildSection(String sectionName, List<DocumentSnapshot> todos) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Text(
-                sectionName,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-        sectionName == 'Pending' && todos.isEmpty
-            ? Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('할 일이 없는 날입니다. 사랑한다고 말해볼까요?'),
-              )
-            : ListView.builder(
-                shrinkWrap: true,
-                physics: ClampingScrollPhysics(),
-                itemCount: todos.length,
-                itemBuilder: (context, index) {
-                  DocumentSnapshot doc = todos[index];
-                  Map<String, dynamic> data =
-                      doc.data() as Map<String, dynamic>;
-                  Todo todo = Todo.fromJson(data);
-                  todo.id = doc.id;
-                  return ListTile(
-                    selected: todo.isDone,
-                    selectedColor: BODY_TEXT_COLOR,
-                    selectedTileColor: Colors.white10,
-                    onTap: () {
-                      if (todo.isDone) {
-                        return;
-                      }
-                      Navigator.push(
+          completedTodos.sort((a, b) {
+            // 1차 정렬: type 오름차순
+            Todo aTodo = Todo.fromJson(a.data() as Map<String, dynamic>);
+            Todo bTodo = Todo.fromJson(b.data() as Map<String, dynamic>);
+            int typeComparison = bTodo.type.compareTo(aTodo.type);
+            if (typeComparison != 0) {
+              return typeComparison;
+            }
+
+            // 2차 정렬: timestamp 오름차순
+            return bTodo.timestamp.compareTo(aTodo.timestamp);
+          });
+          if (pendingTodos.isEmpty && completedTodos.isEmpty) {
+            return Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => CreateTodo(
-                                    todo: todo,
-                                  )));
-                    },
-                    leading: Container(
-                        color: labelColors[todo.type],
-                        child: SizedBox(
-                          width: 10,
-                          height: 500,
-                        )),
-                    title: Text(todo.title),
-                    trailing: Checkbox(
-                      value: todo.isDone,
-                      activeColor: PRIMARY_COLOR,
-                      onChanged: (value) {
-                        firestore.collection('todo').doc(todo.id).update({
-                          'isDone': !todo.isDone,
-                          'timestamp': Timestamp.now()
-                        });
+                                    todo: Todo(
+                                      userId: FirebaseAuth
+                                          .instance.currentUser!.email!,
+                                      title: '',
+                                      isMine: true,
+                                      isDone: false,
+                                      type: 0,
+                                      timestamp: Timestamp.now(),
+                                      content: '',
+                                    ),
+                                  )),
+                        );
                       },
-                    ),
-                  );
-                },
-              ),
-      ],
-    );
+                      icon: Icon(
+                        Icons.add,
+                        color: PRIMARY_COLOR,
+                      )),
+                ),
+                Text(
+                  "할 일을 추가해볼까요? :)",
+                  style: TextStyle(color: TEXT_COLOR),
+                ),
+              ],
+            ));
+          } else {
+            return ListView(
+              children: [
+                Helper.BuildSection('진행중', pendingTodos),
+                Helper.BuildSection('완료됨', completedTodos),
+              ],
+            );
+          }
+        });
   }
 }

@@ -22,7 +22,7 @@ Future<void> setNickname(BuildContext context, WidgetRef ref) async {
   firestore
       .collection('user')
       .doc(FirebaseAuth.instance.currentUser!.email!)
-      .set({'nickname': enteredText});
+      .update({'nickname': enteredText});
 }
 
 Future<Map<String, dynamic>?> resetPartner(WidgetRef ref) async {

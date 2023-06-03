@@ -36,14 +36,14 @@ class _SplashViewState extends ConsumerState<SplashView> {
     if (FirebaseAuth.instance.currentUser == null) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const LoginScreen()),
-            (route) => false,
+        (route) => false,
       );
       return;
     }
     Map<String, dynamic>? myUserInfoJson = (await firestore
-        .collection('user')
-        .doc(FirebaseAuth.instance.currentUser!.email!)
-        .get())
+            .collection('user')
+            .doc(FirebaseAuth.instance.currentUser!.email!)
+            .get())
         .data();
 
     String? nickname = myUserInfoJson?['nickname'];
@@ -65,31 +65,17 @@ class _SplashViewState extends ConsumerState<SplashView> {
           return;
         }
         if (myUserInfoJson?['partnerEmail'] == null) {
-          // ref.read(partnerNotifierProvider.notifier).state = null;
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: const Text('상대방 정보가 없습니다. 상대방이 공유 중단했습니다.'),
-            action: SnackBarAction(
-              textColor: PRIMARY_COLOR,
-              label: '나가기',
-              onPressed: () {
-                goRoot();
-              },
-            ),
-          ));
+          ref.read(partnerNotifierProvider.notifier).state = null;
         } else {
           String yourEmail = myUserInfoJson!['partnerEmail'];
-          Map<String, dynamic>? yourUserInfoJson = (await firestore
-              .collection('user')
-              .doc(yourEmail)
-              .get())
-              .data();
+          Map<String, dynamic>? yourUserInfoJson =
+              (await firestore.collection('user').doc(yourEmail).get()).data();
           ref.read(partnerNotifierProvider.notifier).state = UserDomain(
               email: yourEmail,
               name: yourUserInfoJson?['nickname'] ?? '',
               thumbnail: '');
-          goRoot();
         }
-
+        goRoot();
       }
     });
   }

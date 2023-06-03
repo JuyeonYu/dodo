@@ -96,7 +96,9 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                 _saveTodo();
               },
               child: _isSaving
-                  ? CircularProgressIndicator()
+                  ? CircularProgressIndicator(
+                      color: PRIMARY_COLOR,
+                    )
                   : Text(
                       _isEditing ? '수정' : '작성',
                       style: TextStyle(
@@ -254,22 +256,46 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                           )
                         : IconButton(
                             onPressed: () async {
-                              setState(() {
-                                _isDeleting = true;
-                              });
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('알림'),
+                                      content: Text(
+                                          '삭제할까요?\n공유한 상대방도 할 일이 삭제됩니다.'),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {},
+                                            child: const Text('취소', style: TextStyle(
+                                                color: TEXT_COLOR),)),
+                                        TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                _isDeleting = true;
+                                              });
 
-                              firestore
-                                  .collection('todo')
-                                  .doc(widget.todo.id)
-                                  .delete();
-                              setState(() {
-                                _isDeleting = false;
-                              });
-                              Navigator.pop(context);
+                                              firestore
+                                                  .collection('todo')
+                                                  .doc(widget.todo.id)
+                                                  .delete();
+                                              setState(() {
+                                                _isDeleting = false;
+                                              });
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text(
+                                              '삭제',
+                                              style: TextStyle(
+                                                  color: Colors.redAccent),
+                                            ))
+                                      ],
+                                    );
+                                  });
                             },
                             icon: Icon(
                               Icons.delete,
-                              color: Colors.redAccent,
+                              color: POINT_COLOR,
                             )))
                     : Spacer()
               ],
