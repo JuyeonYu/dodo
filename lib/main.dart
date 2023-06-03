@@ -24,7 +24,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp(
-        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        title: '두두',
         theme: ThemeData(
           checkboxTheme: CheckboxThemeData(
               fillColor: MaterialStatePropertyAll(PRIMARY_COLOR)),
