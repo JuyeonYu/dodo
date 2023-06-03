@@ -117,7 +117,11 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                                             onPressed: () {
                                               Navigator.pop(context);
                                             },
-                                            child: const Text('취소', style: TextStyle(color: BACKGROUND_COLOR),),
+                                            child: const Text(
+                                              '취소',
+                                              style: TextStyle(
+                                                  color: BACKGROUND_COLOR),
+                                            ),
                                           ),
                                           TextButton(
                                             onPressed: () async {
@@ -150,9 +154,12 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                                                   .delete();
                                               Navigator.pop(context);
                                             },
-                                            child: const Text('공유 중단', style: TextStyle(color: PRIMARY_COLOR),),
+                                            child: const Text(
+                                              '공유 중단',
+                                              style: TextStyle(
+                                                  color: PRIMARY_COLOR),
+                                            ),
                                           ),
-
                                         ]);
                                   });
                             },
