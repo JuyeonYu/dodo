@@ -1,9 +1,4 @@
-import 'dart:ffi';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dodo/user/model/nickname_provider.dart';
 import 'package:dodo/user/model/partner_provider.dart';
-import 'package:dodo/user/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -96,7 +91,7 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                 _saveTodo();
               },
               child: _isSaving
-                  ? CircularProgressIndicator(
+                  ? const CircularProgressIndicator(
                       color: PRIMARY_COLOR,
                     )
                   : Text(
@@ -125,15 +120,15 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                             widget.todo!.title = value;
                           });
                         },
-                        contentPadding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                        contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                         backgroundColor: Colors.transparent,
                         borderColor: Colors.transparent,
                         autofocus: true,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
-                      Text(
+                      const Text(
                         '누가 할까요?',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w500),
@@ -178,11 +173,11 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                           },
                         ).toList(),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       Row(
-                        children: [
+                        children: const [
                           Text(
                             '이 일의 중요도를 선택해주세요.',
                             style: TextStyle(
@@ -202,7 +197,7 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                           (int index) {
                             return ChoiceChip(
                               shape: index == widget.todo.type
-                                  ? StadiumBorder(side: BorderSide(width: 0.8))
+                                  ? const StadiumBorder(side: BorderSide(width: 0.8))
                                   : null,
                               backgroundColor: labelColors[index],
                               selectedColor: labelColors[index],
@@ -219,14 +214,14 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                           },
                         ).toList(),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: TextField(
                           controller: _memoController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: '메모',
                               hintStyle: TextStyle(
@@ -250,8 +245,8 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                 Spacer(),
                 _isEditing
                     ? (_isDeleting
-                        ? Padding(
-                            padding: const EdgeInsets.all(8.0),
+                        ? const Padding(
+                            padding: EdgeInsets.all(8.0),
                             child: CircularProgressIndicator(),
                           )
                         : IconButton(
@@ -260,14 +255,17 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('알림'),
-                                      content: Text(
-                                          '삭제할까요?\n공유한 상대방도 할 일이 삭제됩니다.'),
+                                      title: const Text('알림'),
+                                      content:
+                                          const Text('삭제할까요?\n공유한 상대방도 할 일이 삭제됩니다.'),
                                       actions: [
                                         TextButton(
                                             onPressed: () {},
-                                            child: const Text('취소', style: TextStyle(
-                                                color: TEXT_COLOR),)),
+                                            child: const Text(
+                                              '취소',
+                                              style:
+                                                  TextStyle(color: TEXT_COLOR),
+                                            )),
                                         TextButton(
                                             onPressed: () {
                                               setState(() {
@@ -293,11 +291,11 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                                     );
                                   });
                             },
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.delete,
                               color: POINT_COLOR,
                             )))
-                    : Spacer()
+                    : const Spacer()
               ],
             )
           ],

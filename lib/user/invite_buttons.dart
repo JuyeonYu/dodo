@@ -86,14 +86,14 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                             onPressed: () {
                               Share.share('두두 초대 코드: $shareCode');
                             },
-                            child: const Text('공유'),
                             style: TextButton.styleFrom(
                                 foregroundColor: PRIMARY_COLOR),
+                            child: const Text('공유'),
                           ),
                         ]);
                   });
             },
-            child: Text('초대하기')),
+            child: const Text('초대하기')),
         ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             onPressed: () async {
@@ -106,7 +106,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
               String? enteredText = await showDialog<String>(
                   context: context,
                   builder: (BuildContext context) {
-                    return TextInputDialog(
+                    return const TextInputDialog(
                       title: '초대코드(최대 6자)',
                       hint: '초대코드를 입력해주세요(숫자, 소문자)',
                       maxLength: 6,
@@ -132,7 +132,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                         int diff = Timestamp.now().compareTo(timestamp);
                         print(diff);
                         return AlertDialog(
-                            title: Text('알림'),
+                            title: const Text('알림'),
                             content: Text('초대한 사람의 정보가 맞습니까?\n닉네임: $hostName'),
                             actions: <Widget>[
                               TextButton(
@@ -182,10 +182,6 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                           name: hostName,
                                           thumbnail: ''));
                                   Navigator.pop(context);
-                                  // Navigator.of(context).pop();
-                                  // setState(() {
-                                  //
-                                  // });
                                 },
                                 child: const Text('네', style: TextStyle(color: PRIMARY_COLOR),),
                               ),
@@ -196,7 +192,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                            title: Text('알림'),
+                            title: const Text('알림'),
                             content: const Text(
                                 '??해당 초대 코드에 문제가 있습니다. 코대 코드 생성을 다시 한번 부탁드립니다.'),
                             actions: <Widget>[
@@ -213,7 +209,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                            title: Text('없는 초대코드입니다.'),
+                            title: const Text('없는 초대코드입니다.'),
                             // content: const Text('초대한 사람 email: $'),
                             actions: <Widget>[
                               TextButton(
@@ -227,7 +223,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                 }
               });
             },
-            child: inInvitated ? CircularProgressIndicator() : Text('초대받기')),
+            child: inInvitated ? const CircularProgressIndicator() : const Text('초대받기')),
       ],
     );
   }

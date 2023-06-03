@@ -18,7 +18,7 @@ class Helper {
             children: [
               Text(
                 sectionName,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -35,7 +35,7 @@ class Helper {
               )
             : ListView.builder(
                 shrinkWrap: true,
-                physics: ClampingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 itemCount: todos.length,
                 itemBuilder: (context, index) {
                   DocumentSnapshot doc = todos[index];
@@ -58,7 +58,7 @@ class Helper {
                     },
                     leading: Container(
                         color: labelColors[todo.type],
-                        child: SizedBox(
+                        child: const SizedBox(
                           width: 10,
                           height: 500,
                         )),
@@ -75,8 +75,8 @@ class Helper {
                                             context: context,
                                             builder: (BuildContext context) {
                                               return AlertDialog(
-                                                title: Text('알림'),
-                                                content: Text(
+                                                title: const Text('알림'),
+                                                content: const Text(
                                                     '삭제할까요?\n공유한 상대방도 할 일이 삭제됩니다.'),
                                                 actions: [
                                                   TextButton(
@@ -105,7 +105,7 @@ class Helper {
                                               );
                                             });
                                       },
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.delete,
                                         color: POINT_COLOR,
                                       ))

@@ -1,8 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
 import '../common/component/common_text_form_field.dart';
 import '../common/const/colors.dart';
 import '../common/default_layout.dart';
@@ -31,49 +28,44 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 32,
               ),
               Icon(
                 Icons.ac_unit_outlined,
                 size: MediaQuery.of(context).size.width / 3,
               ),
-              Container(
-                child: SizedBox(
-                  height: 32,
-                ),
+              const SizedBox(
+                height: 32,
               ),
-              Text(
+              const Text(
                 '행복한 하루 되세요!',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 32,
               ),
               CustomTextFormField(
                   hintText: 'Email',
                   onChanged: (String value) {
-                    print(value);
-                    print(email);
                     email = value;
                   }),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               CustomTextFormField(
                   obscureText: true,
                   hintText: 'Password',
                   onChanged: (String value) {
-                    print(value);
                     password = value;
                   }),
-              SizedBox(
+              const SizedBox(
                 height: 32,
               ),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       backgroundColor: PRIMARY_COLOR,
-                      padding: EdgeInsets.all(16)),
+                      padding: const EdgeInsets.all(16)),
                   onPressed: () async {
                     /*
                     local server test
@@ -97,11 +89,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         MaterialPageRoute(builder: (_) => RootTab()),
                         (route) => false);
                   },
-                  child: Text(
+                  child: const Text(
                     'sign in',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   )),
-              Spacer(),
+              const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -109,15 +101,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         print('email: $email');
                       },
-                      icon: Icon(Icons.adb)),
+                      icon: const Icon(Icons.adb)),
                   IconButton(
-                      onPressed: () {}, icon: Icon(Icons.ac_unit_outlined)),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.adb))
+                      onPressed: () {}, icon: const Icon(Icons.ac_unit_outlined)),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.adb))
                 ],
               ),
               TextButton(
                   onPressed: () async {},
-                  child: Text(
+                  child: const Text(
                     '회원가입',
                     style: TextStyle(color: Colors.black),
                   ))

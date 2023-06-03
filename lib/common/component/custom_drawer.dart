@@ -13,6 +13,8 @@ import '../const/colors.dart';
 import '../const/data.dart';
 
 class CustomDrawer extends ConsumerStatefulWidget {
+  const CustomDrawer({super.key});
+
   @override
   _CustomDrawerState createState() => _CustomDrawerState();
 }
@@ -42,7 +44,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: PRIMARY_COLOR,
             ),
             child: Row(
@@ -73,11 +75,9 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                         )
                       ],
                     ),
-                    Container(
-                      child: Text(
-                        FirebaseAuth.instance.currentUser?.email ?? '',
-                        style: TextStyle(color: TEXT_COLOR),
-                      ),
+                    Text(
+                      FirebaseAuth.instance.currentUser?.email ?? '',
+                      style: const TextStyle(color: TEXT_COLOR),
                     ),
                   ],
                 ),
@@ -85,7 +85,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
             ),
           ),
           ListTile(
-            title: Text('같이 하는 사람'),
+            title: const Text('같이 하는 사람'),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -109,7 +109,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                        title: Text('알림'),
+                                        title: const Text('알림'),
                                         content: const Text(
                                             '상대방의 할일 목록이 모두 사라집니다. 그래도 진행할까요?'),
                                         actions: <Widget>[
@@ -163,9 +163,9 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                                         ]);
                                   });
                             },
-                            child: Text('공유 중단'),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: BACKGROUND_COLOR),
+                            child: const Text('공유 중단'),
                           ),
                         ],
                       );
@@ -176,7 +176,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                       // 데이터가 없는 경우 UI 업데이트
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
+                        children: const [
                           Text('초대된 사람이 없습니다.'),
                         ],
                       );
@@ -194,7 +194,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
               Icons.question_mark_outlined,
               color: Colors.grey[850],
             ),
-            title: Text('문의하기'),
+            title: const Text('문의하기'),
             onTap: () {
               FlutterEmailSender.send(Email(
                   subject: '[dodo 문의]', recipients: ['remake382@gmail.com']));
@@ -205,17 +205,17 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                 Icons.logout,
                 color: Colors.grey[850],
               ),
-              title: Text('로그아웃'),
+              title: const Text('로그아웃'),
               onTap: () async {
                 setState(() {
                   inSignout = true;
                 });
                 FirebaseAuth.instance.signOut();
                 Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (_) => LoginScreen()),
+                    MaterialPageRoute(builder: (_) => const LoginScreen()),
                     (route) => false);
               },
-              trailing: inSignout ? CircularProgressIndicator() : null),
+              trailing: inSignout ? const CircularProgressIndicator() : null),
         ],
       ),
     );

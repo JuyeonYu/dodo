@@ -20,7 +20,7 @@ class TextInputDialog extends StatefulWidget {
 
 class _TextInputDialogState extends State<TextInputDialog> {
   bool isEmpty = true;
-  TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
 
   @override
   void dispose() {
@@ -49,7 +49,7 @@ class _TextInputDialogState extends State<TextInputDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text(
+          child: const Text(
             '취소',
             style: TextStyle(color: BACKGROUND_COLOR),
           ),

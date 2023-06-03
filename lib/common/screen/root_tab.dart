@@ -1,31 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dodo/common/component/custom_drawer.dart';
-import 'package:dodo/common/const/data.dart';
 import 'package:dodo/todo/create_todo.dart';
-import 'package:dodo/todo/search_todo.dart';
-import 'package:dodo/user/help.dart';
-import 'package:dodo/user/invite_buttons.dart';
-import 'package:dodo/user/login_screen.dart';
-import 'package:dodo/user/model/nickname_provider.dart';
 import 'package:dodo/user/model/partner_provider.dart';
-import 'package:dodo/user/more_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../todo/model/todo.dart';
 import '../../todo/todo_tab_screen.dart';
-import '../../user/model/user.dart';
-import '../component/text_input_dialog.dart';
 import '../const/colors.dart';
 import '../default_layout.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-import '../util/helper.dart';
 
 class RootTab extends ConsumerStatefulWidget {
   const RootTab({Key? key}) : super(key: key);
@@ -99,12 +82,12 @@ class _RootTabState extends ConsumerState<RootTab>
                                 )),
                       );
                     },
-                    child: Text('할 일 추가', style: TextStyle(color: PRIMARY_COLOR),)),
+                    child: const Text('할 일 추가', style: TextStyle(color: PRIMARY_COLOR),)),
               ),
             ],
           ),
         ),
-        drawer: CustomDrawer(),
+        drawer: const CustomDrawer(),
         child: TabBarView(
           physics: const NeverScrollableScrollPhysics(),
           controller: controller,

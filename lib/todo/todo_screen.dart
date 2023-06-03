@@ -3,7 +3,6 @@ import 'package:dodo/common/const/data.dart';
 import 'package:dodo/todo/create_todo.dart';
 import 'package:dodo/user/invite_buttons.dart';
 import 'package:dodo/user/model/partner_provider.dart';
-import 'package:dodo/user/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,10 +27,10 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
       return Center(
         child: SingleChildScrollView(
           child: Column(
-            children: [
+            children: const [
               Text('초대된 사람이 없습니다.'),
               Padding(
-                padding: const EdgeInsets.all(50.0),
+                padding: EdgeInsets.all(50.0),
                 child: InviteButtons(),
               ),
             ],
@@ -49,7 +48,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -117,12 +116,12 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                                   )),
                         );
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.add,
                         color: PRIMARY_COLOR,
                       )),
                 ),
-                Text(
+                const Text(
                   "할 일을 추가해볼까요? :)",
                   style: TextStyle(color: TEXT_COLOR),
                 ),

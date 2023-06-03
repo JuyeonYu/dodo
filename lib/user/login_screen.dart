@@ -1,17 +1,12 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-
-import '../common/component/common_text_form_field.dart';
 import '../common/const/colors.dart';
 import '../common/default_layout.dart';
 import '../common/screen/root_tab.dart';
-import 'model/user.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -36,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 32,
             ),
             SizedBox(
@@ -45,13 +40,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Image.asset(
                   'assets/images/logo.png',
                 )),
-            Container(
-              child: SizedBox(
-                height: 32,
-              ),
+            const SizedBox(
+              height: 32,
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Text(
                 '이 일은 내가 하고,',
                 style: TextStyle(
@@ -62,8 +55,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Text(
                 '저 일은 네가 하고',
                 style: TextStyle(
@@ -73,8 +66,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: TEXT_COLOR),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Text(
                 '우리 둘이 두두!',
                 style: TextStyle(
@@ -84,9 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: TEXT_COLOR),
               ),
             ),
-
-
-            Spacer(),
+            const Spacer(),
             defaultTargetPlatform == TargetPlatform.android
                 ? SizedBox(
                     height: 50,
@@ -96,18 +87,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             backgroundColor: Colors.white),
                         onPressed: () async {
                               await signInWithGoogle();
-                          // if (userCredential.user?.email != null) {
-                          //   UserDomain.myself.email =
-                          //       userCredential.user!.email!;
-                          // }
-                          // if (userCredential.user?.displayName != null) {
-                          //   UserDomain.myself.name =
-                          //       userCredential.user!.displayName!;
-                          // }
-                          // if (userCredential.user?.photoURL != null) {
-                          //   UserDomain.myself.thumbnail =
-                          //       userCredential.user!.photoURL!;
-                          // }
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(builder: (_) => RootTab()),
                               (route) => false);
@@ -120,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 18,
                                 child: Image.asset(
                                     'assets/images/google_logo.png')),
-                            Text('     Sign in with Google', style: TextStyle(fontFamily: 'Robot'),)
+                            const Text('     Sign in with Google', style: TextStyle(fontFamily: 'Robot'),)
                           ],
                         )),
                   )
@@ -146,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           (route) => false);
                     },
                   ),
-            SizedBox(height: 50,)
+            const SizedBox(height: 50,)
           ],
         ),
       ),

@@ -1,10 +1,6 @@
 import 'package:dodo/common/const/colors.dart';
-import 'package:dodo/common/default_layout.dart';
 import 'package:dodo/todo/todo_screen.dart';
-import 'package:dodo/user/help.dart';
 import 'package:dodo/user/model/partner_provider.dart';
-import 'package:dodo/user/model/user.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,15 +18,12 @@ class _TodoTabScreenState extends ConsumerState<TodoTabScreen>
 
   @override
   void initState() {
-
     super.initState();
     _tabController = TabController(
       length: 2,
       vsync: this,
     );
-    // resetPartner(ref);
     _tabController.addListener(() {
-      // resetPartner(ref);
       setState(() {
         tabIndex = _tabController.index;
       });
@@ -49,7 +42,7 @@ class _TodoTabScreenState extends ConsumerState<TodoTabScreen>
     return Scaffold(
       appBar: AppBar(
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(0),
+          preferredSize: const Size.fromHeight(0),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
@@ -59,13 +52,15 @@ class _TodoTabScreenState extends ConsumerState<TodoTabScreen>
                   indicatorColor: PRIMARY_COLOR,
                   isScrollable: true,
                   tabs: [
-                    Padding(
-                      padding: const EdgeInsets.all(8),
+                    const Padding(
+                      padding: EdgeInsets.all(8),
                       child: Text('나'),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8),
-                      child: state == null ? Text('초대된 친구가 없습니다.') : Text(ref.watch(partnerNotifierProvider)!.name),
+                      child: state == null
+                          ? const Text('초대된 친구가 없습니다.')
+                          : Text(ref.watch(partnerNotifierProvider)!.name),
                     ),
                   ],
                   controller: _tabController),

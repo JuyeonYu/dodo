@@ -1,6 +1,5 @@
 import 'package:dodo/common/default_layout.dart';
 import 'package:dodo/common/screen/root_tab.dart';
-import 'package:dodo/common/util/helper.dart';
 import 'package:dodo/user/help.dart';
 import 'package:dodo/user/model/nickname_provider.dart';
 import 'package:dodo/user/model/partner_provider.dart';
@@ -9,8 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../user/login_screen.dart';
-import 'component/text_input_dialog.dart';
-import 'const/colors.dart';
 import 'const/data.dart';
 
 class SplashView extends ConsumerStatefulWidget {
@@ -24,7 +21,6 @@ class _SplashViewState extends ConsumerState<SplashView> {
   @override
   void initState() {
     super.initState();
-    // deleteAll();
     checkToken();
   }
 

@@ -12,14 +12,14 @@ import '../../main.dart';
 Color hexToColor(String hexCode) {
   String hex = hexCode.replaceAll('#', '');
   if (hex.length == 6) {
-    hex = 'FF' + hex;
+    hex = 'FF$hex';
   }
   return Color(int.parse(hex, radix: 16));
 }
 
 
 String generateShortHashFromUUID() {
-  final uuid = Uuid();
+  const uuid = Uuid();
   final randomUUID = uuid.v4(); // 랜덤 UUID 생성
 
   final bytes = utf8.encode(randomUUID); // UTF-8로 인코딩된 UUID 바이트 배열
