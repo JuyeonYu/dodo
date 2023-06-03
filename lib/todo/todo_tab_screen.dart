@@ -59,7 +59,7 @@ class _TodoTabScreenState extends ConsumerState<TodoTabScreen>
                     Padding(
                       padding: const EdgeInsets.all(8),
                       child: state == null
-                          ? const Text('초대된 친구가 없습니다.')
+                          ? const Text('초대된 사람이 없습니다.')
                           : Text(ref.watch(partnerNotifierProvider)!.name),
                     ),
                   ],

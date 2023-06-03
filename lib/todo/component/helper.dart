@@ -63,67 +63,65 @@ class Helper {
                           height: 500,
                         )),
                     title: Text(todo.title),
-                    trailing: isSearching
-                        ? null
-                        : Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              todo.isDone
-                                  ? IconButton(
-                                      onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: const Text('알림'),
-                                                content: const Text(
-                                                    '삭제할까요?\n공유한 상대방도 할 일이 삭제됩니다.'),
-                                                actions: [
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: const Text(
-                                                        '취소',
-                                                        style: TextStyle(
-                                                            color: TEXT_COLOR),
-                                                      )),
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        firestore
-                                                            .collection('todo')
-                                                            .doc(todo.id)
-                                                            .delete();
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: const Text(
-                                                        '삭제',
-                                                        style: TextStyle(
-                                                            color: POINT_COLOR),
-                                                      ))
-                                                ],
-                                              );
-                                            });
-                                      },
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: POINT_COLOR,
-                                      ))
-                                  : Container(),
-                              Checkbox(
-                                value: todo.isDone,
-                                onChanged: (value) {
-                                  firestore
-                                      .collection('todo')
-                                      .doc(todo.id)
-                                      .update({
-                                    'isDone': !todo.isDone,
-                                    'timestamp': Timestamp.now()
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        todo.isDone
+                            ? IconButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('알림'),
+                                      content: const Text(
+                                          '삭제할까요?\n공유한 상대방도 할 일이 삭제됩니다.'),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text(
+                                              '취소',
+                                              style: TextStyle(
+                                                  color: TEXT_COLOR),
+                                            )),
+                                        TextButton(
+                                            onPressed: () {
+                                              firestore
+                                                  .collection('todo')
+                                                  .doc(todo.id)
+                                                  .delete();
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text(
+                                              '삭제',
+                                              style: TextStyle(
+                                                  color: POINT_COLOR),
+                                            ))
+                                      ],
+                                    );
                                   });
-                                },
-                              ),
-                            ],
-                          ),
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                              color: POINT_COLOR,
+                            ))
+                            : Container(),
+                        Checkbox(
+                          value: todo.isDone,
+                          onChanged: (value) {
+                            firestore
+                                .collection('todo')
+                                .doc(todo.id)
+                                .update({
+                              'isDone': !todo.isDone,
+                              'timestamp': Timestamp.now()
+                            });
+                          },
+                        ),
+                      ],
+                    ),
                   );
                 },
               ),

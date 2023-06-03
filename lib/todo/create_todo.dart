@@ -113,6 +113,7 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       CustomTextFormField(
+                        maxLength: 24,
                         initialValue: widget.todo.title,
                         hintText: '제목',
                         onChanged: (String value) {
@@ -197,7 +198,8 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                           (int index) {
                             return ChoiceChip(
                               shape: index == widget.todo.type
-                                  ? const StadiumBorder(side: BorderSide(width: 0.8))
+                                  ? const StadiumBorder(
+                                      side: BorderSide(width: 0.8))
                                   : null,
                               backgroundColor: labelColors[index],
                               selectedColor: labelColors[index],
@@ -220,6 +222,7 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: TextField(
+                          maxLength: 60,
                           controller: _memoController,
                           decoration: const InputDecoration(
                               border: InputBorder.none,
@@ -256,8 +259,8 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       title: const Text('알림'),
-                                      content:
-                                          const Text('삭제할까요?\n공유한 상대방도 할 일이 삭제됩니다.'),
+                                      content: const Text(
+                                          '삭제할까요?\n공유한 상대방도 할 일이 삭제됩니다.'),
                                       actions: [
                                         TextButton(
                                             onPressed: () {},
