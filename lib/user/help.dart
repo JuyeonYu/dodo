@@ -18,6 +18,9 @@ Future<void> setNickname(BuildContext context, WidgetRef ref) async {
           maxLength: 8,
         );
       });
+  if (enteredText == null || enteredText.isEmpty) {
+    return;
+  }
   ref.read(nicknameProvider.notifier).state = enteredText;
   firestore
       .collection('user')

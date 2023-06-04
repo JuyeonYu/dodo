@@ -197,7 +197,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
             title: const Text('문의하기'),
             onTap: () {
               FlutterEmailSender.send(Email(
-                  subject: '[dodo 문의]', recipients: ['remake382@gmail.com']));
+                  subject: '[dodo 문의]', recipients: ['2x2isfor@gmail.com']));
             },
           ),
           ListTile(
