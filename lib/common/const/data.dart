@@ -9,7 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 final storage = FlutterSecureStorage();
 final firestore = FirebaseFirestore.instance;
 User? user = FirebaseAuth.instance.currentUser;
-String? userId = user?.email ?? user?.uid;
+String? userId = (user?.email == '' || user?.email == null) ? user?.uid : user?.email;
 
 const androidFullAdId = 'ca-app-pub-3940256099942544/1033173712'; // ca-app-pub-7604048409167711/2642760342
 const iOSFullAdId = 'ca-app-pub-3940256099942544/1033173712';

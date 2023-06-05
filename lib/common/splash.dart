@@ -29,8 +29,8 @@ class _SplashViewState extends ConsumerState<SplashView> {
   }
 
   void checkToken() async {
-    if (FirebaseAuth.instance.currentUser == null) {
-      Navigator.of(context).pushAndRemoveUntil(
+    if (FirebaseAuth.instance.currentUser == null || userId == null || userId == '') {
+      await Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const LoginScreen()),
         (route) => false,
       );
