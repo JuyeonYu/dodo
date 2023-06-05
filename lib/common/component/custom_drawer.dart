@@ -92,7 +92,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                 StreamBuilder<DocumentSnapshot>(
                   stream: firestore
                       .collection('user')
-                      .doc(FirebaseAuth.instance.currentUser?.email ?? '')
+                      .doc(userId)
                       .snapshots(), // 구독할 스트림을 지정
                   builder: (BuildContext context,
                       AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -127,9 +127,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                                             onPressed: () async {
                                               await firestore
                                                   .collection('user')
-                                                  .doc(FirebaseAuth.instance
-                                                          .currentUser?.email ??
-                                                      '')
+                                                  .doc(userId)
                                                   .update({
                                                 'partnerEmail': null,
                                               });

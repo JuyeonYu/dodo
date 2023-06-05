@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../main.dart';
+import '../const/colors.dart';
 
 Color hexToColor(String hexCode) {
   String hex = hexCode.replaceAll('#', '');
@@ -16,7 +17,6 @@ Color hexToColor(String hexCode) {
   }
   return Color(int.parse(hex, radix: 16));
 }
-
 
 String generateShortHashFromUUID() {
   const uuid = Uuid();
@@ -32,13 +32,8 @@ String generateShortHashFromUUID() {
 }
 
 Future<String?> getNickName() async {
-  String? email = FirebaseAuth.instance.currentUser?.email;
-  if (email == null) {
-    return null;
-  }
-  Map<String, dynamic>? data = (await firestore.collection('user')
-      .doc(email!)
-      .get()).data();
+  Map<String, dynamic>? data =
+      (await firestore.collection('user').doc(userId).get()).data();
   String? nickname = data?['nickname'];
   return nickname;
 }
@@ -46,4 +41,19 @@ Future<String?> getNickName() async {
 void restartApp() {
   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
   runApp(const MyApp());
+}
+
+void checkLogin(BuildContext context) {
+  if (FirebaseAuth.instance.currentUser == null) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Text('로그인이 필요합니다.'),
+      action: SnackBarAction(
+        textColor: PRIMARY_COLOR,
+        label: '바로가기',
+        onPressed: () {
+          Navigator.popUntil(context, (route) => route.isFirst);
+        },
+      ),
+    ));
+  }
 }

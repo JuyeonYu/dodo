@@ -38,7 +38,7 @@ class _SplashViewState extends ConsumerState<SplashView> {
     }
     Map<String, dynamic>? myUserInfoJson = (await firestore
             .collection('user')
-            .doc(FirebaseAuth.instance.currentUser!.email!)
+            .doc(userId)
             .get())
         .data();
 

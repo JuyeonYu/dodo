@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dodo/common/const/data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../common/const/colors.dart';
 import '../common/default_layout.dart';
 import '../common/screen/root_tab.dart';
+import '../firebase_call/firebaseCall.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -87,9 +89,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             backgroundColor: Colors.white),
                         onPressed: () async {
                               await signInWithGoogle();
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(builder: (_) => RootTab()),
-                              (route) => false);
+                              await insertUser();
+                              goRoot(context);
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -120,16 +121,34 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       await FirebaseAuth.instance
                           .signInWithCredential(oauthCredential);
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (_) => RootTab()),
-                          (route) => false);
+                      await insertUser();
+                      goRoot(context);
                     },
                   ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(onPressed: () async {
+                  await FirebaseAuth.instance.signInAnonymously();
+                  await insertUser();
+                  goRoot(context);
+
+
+                }, child: const Text('게스트로 들아가기')),
+                IconButton(onPressed: (){}, icon: const Icon(Icons.info))
+              ],
+            ),
             const SizedBox(height: 50,)
           ],
         ),
       ),
     ));
+  }
+
+  void goRoot(BuildContext context) {
+    Navigator.of(context).pushAndRemoveUntil(
+    MaterialPageRoute(builder: (_) => RootTab()),
+    (route) => false);
   }
 
   Future<UserCredential> signInWithGoogle() async {

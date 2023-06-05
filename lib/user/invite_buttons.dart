@@ -59,6 +59,9 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
         ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             onPressed: () {
+              if (user?.email == null) {
+                checkLogin(context);
+              }
               if (ref.read(nicknameProvider) == null ||
                   ref.read(nicknameProvider)!.isEmpty) {
                 showSetNicknameSnackBar(context);
@@ -98,6 +101,9 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
             style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             onPressed: () async {
               // _interstitialAd?.show();
+              if (user?.email == null) {
+                checkLogin(context);
+              }
               if (ref.read(nicknameProvider) == null ||
                   ref.read(nicknameProvider)!.isEmpty) {
                 showSetNicknameSnackBar(context);
@@ -161,9 +167,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                 onPressed: () async {
                                   await firestore
                                       .collection('user')
-                                      .doc(FirebaseAuth
-                                              .instance.currentUser?.email ??
-                                          '')
+                                      .doc(userId)
                                       .update({
                                     'partnerEmail': hostEmail,
                                   });
