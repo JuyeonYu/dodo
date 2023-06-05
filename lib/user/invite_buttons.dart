@@ -103,6 +103,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
               // _interstitialAd?.show();
               if (user?.email == null) {
                 checkLogin(context);
+                return;
               }
               if (ref.read(nicknameProvider) == null ||
                   ref.read(nicknameProvider)!.isEmpty) {

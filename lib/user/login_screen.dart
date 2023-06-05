@@ -50,19 +50,18 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Text(
                 '이 일은 내가 하고,',
                 style: TextStyle(
-                  // fontFamily: ,
+                    // fontFamily: ,
                     fontSize: 15,
                     fontWeight: FontWeight.w100,
                     color: TEXT_COLOR),
               ),
             ),
-
             const Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
                 '저 일은 네가 하고',
                 style: TextStyle(
-                  // fontFamily: ,
+                    // fontFamily: ,
                     fontSize: 15,
                     fontWeight: FontWeight.w100,
                     color: TEXT_COLOR),
@@ -83,26 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
             defaultTargetPlatform == TargetPlatform.android
                 ? SizedBox(
                     height: 50,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.black87,
-                            backgroundColor: Colors.white),
-                        onPressed: () async {
-                              await signInWithGoogle();
-                              await insertUser();
-                              goRoot(context);
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                                width: 18,
-                                height: 18,
-                                child: Image.asset(
-                                    'assets/images/google_logo.png')),
-                            const Text('     Sign in with Google', style: TextStyle(fontFamily: 'Robot'),)
-                          ],
-                        )),
+                    child: googleSignInButton(context),
                   )
                 : SignInWithAppleButton(
                     onPressed: () async {
@@ -128,27 +108,54 @@ class _LoginScreenState extends State<LoginScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextButton(onPressed: () async {
-                  await FirebaseAuth.instance.signInAnonymously();
-                  await insertUser();
-                  goRoot(context);
-
-
-                }, child: const Text('게스트로 들아가기')),
-                IconButton(onPressed: (){}, icon: const Icon(Icons.info))
+                TextButton(
+                    onPressed: () async {
+                      await FirebaseAuth.instance.signInAnonymously();
+                      await insertUser();
+                      goRoot(context);
+                    },
+                    child: const Text(
+                      '게스트로 들어가기',
+                      style: TextStyle(color: BACKGROUND_COLOR),
+                    ))
               ],
             ),
-            const SizedBox(height: 50,)
+            const SizedBox(
+              height: 50,
+            )
           ],
         ),
       ),
     ));
   }
 
+  ElevatedButton googleSignInButton(BuildContext context) {
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.black87, backgroundColor: Colors.white),
+        onPressed: () async {
+          await signInWithGoogle();
+          await insertUser();
+          goRoot(context);
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+                width: 18,
+                height: 18,
+                child: Image.asset('assets/images/google_logo.png')),
+            const Text(
+              '     Sign in with Google',
+              style: TextStyle(fontFamily: 'Robot'),
+            )
+          ],
+        ));
+  }
+
   void goRoot(BuildContext context) {
     Navigator.of(context).pushAndRemoveUntil(
-    MaterialPageRoute(builder: (_) => RootTab()),
-    (route) => false);
+        MaterialPageRoute(builder: (_) => RootTab()), (route) => false);
   }
 
   Future<UserCredential> signInWithGoogle() async {

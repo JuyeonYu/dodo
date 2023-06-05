@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dodo/common/const/data.dart';
+import 'package:dodo/user/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
@@ -44,16 +45,16 @@ void restartApp() {
 }
 
 void checkLogin(BuildContext context) {
-  if (FirebaseAuth.instance.currentUser == null) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: const Text('로그인이 필요합니다.'),
-      action: SnackBarAction(
-        textColor: PRIMARY_COLOR,
-        label: '바로가기',
-        onPressed: () {
-          Navigator.popUntil(context, (route) => route.isFirst);
-        },
-      ),
-    ));
-  }
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    content: const Text('로그인이 필요합니다.'),
+    action: SnackBarAction(
+      textColor: PRIMARY_COLOR,
+      label: '바로가기',
+      onPressed: () {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => const LoginScreen()),
+                (route) => false);
+      },
+    ),
+  ));
 }

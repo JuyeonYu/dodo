@@ -61,6 +61,26 @@ class _RootTabState extends ConsumerState<RootTab>
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Tooltip(
+                    message: "할 일 저장의 영구저장, 초대 기능이 제한됩니다.",
+                    triggerMode: TooltipTriggerMode.tap,
+                    child: Row(
+                      children: const [
+                        Text(
+                          '게스트 모드',
+                          style: TextStyle(color: TEXT_COLOR),
+                        ),
+                        Icon(Icons.info)
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Spacer(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: TextButton(
                     onPressed: () {
                       Navigator.push(
@@ -82,7 +102,10 @@ class _RootTabState extends ConsumerState<RootTab>
                                 )),
                       );
                     },
-                    child: const Text('할 일 추가', style: TextStyle(color: PRIMARY_COLOR),)),
+                    child: const Text(
+                      '할 일 추가',
+                      style: TextStyle(color: PRIMARY_COLOR),
+                    )),
               ),
             ],
           ),

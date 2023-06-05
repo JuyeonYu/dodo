@@ -43,7 +43,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
             .collection('todo')
             .where('userId',
                 isEqualTo: widget.isMine
-                    ? FirebaseAuth.instance.currentUser!.email
+                    ? userId
                     : ref.watch(partnerNotifierProvider)!.email)
             .snapshots(),
         builder: (context, snapshot) {
@@ -104,8 +104,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                           MaterialPageRoute(
                               builder: (context) => CreateTodo(
                                     todo: Todo(
-                                      userId: FirebaseAuth
-                                          .instance.currentUser!.email!,
+                                      userId: userId!,
                                       title: '',
                                       isMine: true,
                                       isDone: false,
