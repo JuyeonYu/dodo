@@ -24,6 +24,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   String email = '';
   String password = '';
   final dio = Dio();
+  bool inLogin = false;
 
   @override
   Widget build(BuildContext context) {
@@ -82,47 +83,66 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ),
             const Spacer(),
-            defaultTargetPlatform == TargetPlatform.android
-                ? SizedBox(
-                    height: 50,
-                    child: googleSignInButton(context),
-                  )
-                : SignInWithAppleButton(
-                    onPressed: () async {
-                      final appleCredential =
-                          await SignInWithApple.getAppleIDCredential(
-                        scopes: [
-                          AppleIDAuthorizationScopes.email,
-                          AppleIDAuthorizationScopes.fullName,
+            inLogin
+                ? const Align(
+                  child: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: CircularProgressIndicator(
+                        color: PRIMARY_COLOR,
+                      )),
+                )
+                : Column(
+                    children: [
+                      defaultTargetPlatform == TargetPlatform.android
+                          ? SizedBox(
+                              height: 50,
+                              child: googleSignInButton(context),
+                            )
+                          : SignInWithAppleButton(
+                              onPressed: () async {
+                                final appleCredential =
+                                    await SignInWithApple.getAppleIDCredential(
+                                  scopes: [
+                                    AppleIDAuthorizationScopes.email,
+                                    AppleIDAuthorizationScopes.fullName,
+                                  ],
+                                );
+                                final oauthCredential =
+                                    OAuthProvider("apple.com").credential(
+                                  idToken: appleCredential.identityToken,
+                                  accessToken:
+                                      appleCredential.authorizationCode,
+                                );
+                                setState(() {
+                                  inLogin = true;
+                                });
+                                await FirebaseAuth.instance
+                                    .signInWithCredential(oauthCredential);
+                                await insertUser();
+                                goRoot();
+                              },
+                            ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                              onPressed: () async {
+                                setState(() {
+                                  inLogin = true;
+                                });
+                                await FirebaseAuth.instance.signInAnonymously();
+                                await insertUser();
+                                goRoot();
+                              },
+                              child: const Text(
+                                '게스트로 들어가기',
+                                style: TextStyle(color: BACKGROUND_COLOR),
+                              ))
                         ],
-                      );
-                      final oauthCredential =
-                          OAuthProvider("apple.com").credential(
-                        idToken: appleCredential.identityToken,
-                        accessToken: appleCredential.authorizationCode,
-                      );
-
-                      await FirebaseAuth.instance
-                          .signInWithCredential(oauthCredential);
-                      await insertUser();
-                      goRoot();
-                    },
+                      ),
+                    ],
                   ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                    onPressed: () async {
-                      await FirebaseAuth.instance.signInAnonymously();
-                      await insertUser();
-                      goRoot();
-                    },
-                    child: const Text(
-                      '게스트로 들어가기',
-                      style: TextStyle(color: BACKGROUND_COLOR),
-                    ))
-              ],
-            ),
             const SizedBox(
               height: 50,
             )
@@ -137,6 +157,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         style: ElevatedButton.styleFrom(
             foregroundColor: Colors.black87, backgroundColor: Colors.white),
         onPressed: () async {
+          setState(() {
+            inLogin = true;
+          });
           await signInWithGoogle();
           await insertUser();
           goRoot();
@@ -157,16 +180,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void goRoot() async {
-    Map<String, dynamic>? myUserInfoJson = (await firestore
-        .collection('user')
-        .doc(userId())
-        .get())
-        .data();
+    Map<String, dynamic>? myUserInfoJson =
+        (await firestore.collection('user').doc(userId()).get()).data();
 
     String? nickname = myUserInfoJson?['nickname'];
     ref.read(nicknameProvider.notifier).state = nickname;
-    Navigator.of(context).pushAndRemoveUntil(
+    await Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => SplashView()), (route) => false);
+    setState(() {
+      inLogin = false;
+    });
   }
 
   Future<UserCredential> signInWithGoogle() async {
