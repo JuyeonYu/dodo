@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dodo/common/const/data.dart';
+import 'package:dodo/common/splash.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       await FirebaseAuth.instance
                           .signInWithCredential(oauthCredential);
                       await insertUser();
-                      goRoot(context);
+                      goRoot();
                     },
                   ),
             Row(
@@ -112,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () async {
                       await FirebaseAuth.instance.signInAnonymously();
                       await insertUser();
-                      goRoot(context);
+                      goRoot();
                     },
                     child: const Text(
                       '게스트로 들어가기',
@@ -136,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: () async {
           await signInWithGoogle();
           await insertUser();
-          goRoot(context);
+          goRoot();
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -153,9 +154,9 @@ class _LoginScreenState extends State<LoginScreen> {
         ));
   }
 
-  void goRoot(BuildContext context) {
+  void goRoot() {
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => RootTab()), (route) => false);
+        MaterialPageRoute(builder: (_) => SplashView()), (route) => false);
   }
 
   Future<UserCredential> signInWithGoogle() async {

@@ -37,7 +37,7 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
     });
     Map<String, dynamic>? userJson = (await firestore
             .collection('user')
-            .doc(userId)
+            .doc(userId())
             .get())
         .data();
     String? serverPartnerEmail = userJson?['partnerEmail'];

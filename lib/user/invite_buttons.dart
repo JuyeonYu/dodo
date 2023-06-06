@@ -59,7 +59,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
         ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             onPressed: () {
-              if (user?.email == null) {
+              if (FirebaseAuth.instance.currentUser?.email == null) {
                 checkLogin(context);
               }
               if (ref.read(nicknameProvider) == null ||
@@ -101,7 +101,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
             style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             onPressed: () async {
               // _interstitialAd?.show();
-              if (user?.email == null) {
+              if (FirebaseAuth.instance.currentUser?.email == null) {
                 checkLogin(context);
                 return;
               }
@@ -168,7 +168,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                 onPressed: () async {
                                   await firestore
                                       .collection('user')
-                                      .doc(userId)
+                                      .doc(userId())
                                       .update({
                                     'partnerEmail': hostEmail,
                                   });

@@ -104,7 +104,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                           MaterialPageRoute(
                               builder: (context) => CreateTodo(
                                     todo: Todo(
-                                      userId: userId!,
+                                      userId: userId()!,
                                       title: '',
                                       isMine: true,
                                       isDone: false,

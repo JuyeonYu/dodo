@@ -38,13 +38,13 @@ class _SplashViewState extends ConsumerState<SplashView> {
     }
     Map<String, dynamic>? myUserInfoJson = (await firestore
             .collection('user')
-            .doc(userId)
+            .doc(userId())
             .get())
         .data();
 
     String? nickname = myUserInfoJson?['nickname'];
     if (nickname == null || nickname!.isEmpty) {
-      await setNickname(context, ref);
+      // await setNickname(context, ref);
     } else {
       ref.read(nicknameProvider.notifier).state = nickname;
     }
