@@ -43,7 +43,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
             .collection('todo')
             .where('userId',
                 isEqualTo: widget.isMine
-                    ? userId
+                    ? userId()
                     : ref.watch(partnerNotifierProvider)!.email)
             .snapshots(),
         builder: (context, snapshot) {

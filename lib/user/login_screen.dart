@@ -4,21 +4,23 @@ import 'package:dodo/common/splash.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../common/const/colors.dart';
 import '../common/default_layout.dart';
 import '../common/screen/root_tab.dart';
 import '../firebase_call/firebaseCall.dart';
+import 'model/nickname_provider.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   String email = '';
   String password = '';
   final dio = Dio();
@@ -154,7 +156,15 @@ class _LoginScreenState extends State<LoginScreen> {
         ));
   }
 
-  void goRoot() {
+  void goRoot() async {
+    Map<String, dynamic>? myUserInfoJson = (await firestore
+        .collection('user')
+        .doc(userId())
+        .get())
+        .data();
+
+    String? nickname = myUserInfoJson?['nickname'];
+    ref.read(nicknameProvider.notifier).state = nickname;
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => SplashView()), (route) => false);
   }

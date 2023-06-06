@@ -59,6 +59,7 @@ class _RootTabState extends ConsumerState<RootTab>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              FirebaseAuth.instance.currentUser?.email == null ?
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Padding(
@@ -77,8 +78,8 @@ class _RootTabState extends ConsumerState<RootTab>
                     ),
                   ),
                 ),
-              ),
-              Spacer(),
+              ) : const Spacer(),
+              const Spacer(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: TextButton(
