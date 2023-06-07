@@ -76,7 +76,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                       ],
                     ),
                     Text(
-                      FirebaseAuth.instance.currentUser?.email ?? '',
+                      FirebaseAuth.instance.currentUser?.email ?? '게스트 모드',
                       style: const TextStyle(color: TEXT_COLOR),
                     ),
                   ],
@@ -92,7 +92,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                 StreamBuilder<DocumentSnapshot>(
                   stream: firestore
                       .collection('user')
-                      .doc(userId())
+                      .doc(getUserId())
                       .snapshots(), // 구독할 스트림을 지정
                   builder: (BuildContext context,
                       AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -127,7 +127,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                                             onPressed: () async {
                                               await firestore
                                                   .collection('user')
-                                                  .doc(userId())
+                                                  .doc(getUserId())
                                                   .update({
                                                 'partnerEmail': null,
                                               });
@@ -212,6 +212,63 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (_) => const LoginScreen()),
                     (route) => false);
+              },
+              trailing: inSignout ? const CircularProgressIndicator() : null),
+          ListTile(
+              leading: Icon(
+                Icons.exit_to_app,
+                color: BACKGROUND_COLOR,
+              ),
+              title: const Text('회원탈퇴', style: TextStyle(color: BACKGROUND_COLOR),),
+              onTap: () async {
+                if (getUserId() == null) {
+                  return;
+                }
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('회원탈퇴'),
+                        content: const Text('회원탈퇴 시 모든 데이터가 삭제됩니다.'),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('취소', style: TextStyle(color: BACKGROUND_COLOR),)),
+                          TextButton(
+                              onPressed: () async {
+                                setState(() {
+                                  inSignout = true;
+                                });
+                                String? userId = getUserId();
+                                if (userId == null) {
+                                  return;
+                                }
+                                await firestore
+                                    .collection('user')
+                                    .doc(userId)
+                                    .delete();
+                                await (firestore
+                                        .collection('todo')
+                                        .where('userId', isEqualTo: userId))
+                                    .get()
+                                    .then((value) =>
+                                        value.docs.forEach((element) {
+                                          element.reference.delete();
+                                        }));
+                                await FirebaseAuth.instance.currentUser
+                                    ?.delete();
+                                await FirebaseAuth.instance.signOut();
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (_) => const LoginScreen()),
+                                    (route) => false);
+                              },
+                              child: const Text('탈퇴', style: TextStyle(color: POINT_COLOR),))
+                        ],
+                      );
+                    });
               },
               trailing: inSignout ? const CircularProgressIndicator() : null),
         ],

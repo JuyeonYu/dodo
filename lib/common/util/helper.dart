@@ -34,7 +34,7 @@ String generateShortHashFromUUID() {
 
 Future<String?> getNickName() async {
   Map<String, dynamic>? data =
-      (await firestore.collection('user').doc(userId()).get()).data();
+      (await firestore.collection('user').doc(getUserId()).get()).data();
   String? nickname = data?['nickname'];
   return nickname;
 }

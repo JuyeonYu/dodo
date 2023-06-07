@@ -29,7 +29,8 @@ class _SplashViewState extends ConsumerState<SplashView> {
   }
 
   void checkToken() async {
-    if (FirebaseAuth.instance.currentUser == null || userId == null || userId == '') {
+    var token = await FirebaseAuth.instance.currentUser?.getIdTokenResult();
+    if (FirebaseAuth.instance.currentUser == null || getUserId() == null || getUserId() == '') {
       await Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const LoginScreen()),
         (route) => false,
@@ -38,7 +39,7 @@ class _SplashViewState extends ConsumerState<SplashView> {
     }
     Map<String, dynamic>? myUserInfoJson = (await firestore
             .collection('user')
-            .doc(userId())
+            .doc(getUserId())
             .get())
         .data();
 

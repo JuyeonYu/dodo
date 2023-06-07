@@ -24,14 +24,14 @@ Future<void> setNickname(BuildContext context, WidgetRef ref) async {
   ref.read(nicknameProvider.notifier).state = enteredText;
   firestore
       .collection('user')
-      .doc(userId())
+      .doc(getUserId())
       .update({'nickname': enteredText});
 }
 
 Future<Map<String, dynamic>?> resetPartner(WidgetRef ref) async {
   Map<String, dynamic>? json = (await firestore
           .collection('user')
-          .doc(userId())
+          .doc(getUserId())
           .get())
       .data();
   if (json?['partnerEmail'] == null) {

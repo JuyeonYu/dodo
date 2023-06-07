@@ -11,7 +11,7 @@ final firestore = FirebaseFirestore.instance;
 // User? user() {
 //   FirebaseAuth.instance.currentUser;
 // }
-String? userId() {
+String? getUserId() {
   User? user = FirebaseAuth.instance.currentUser;
   return (user?.email == '' || user?.email == null) ? user?.uid : user?.email;
 }

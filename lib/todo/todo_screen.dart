@@ -43,7 +43,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
             .collection('todo')
             .where('userId',
                 isEqualTo: widget.isMine
-                    ? userId()
+                    ? getUserId()
                     : ref.watch(partnerNotifierProvider)!.email)
             .snapshots(),
         builder: (context, snapshot) {
@@ -104,7 +104,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                           MaterialPageRoute(
                               builder: (context) => CreateTodo(
                                     todo: Todo(
-                                      userId: userId()!,
+                                      userId: getUserId()!,
                                       title: '',
                                       isMine: true,
                                       isDone: false,

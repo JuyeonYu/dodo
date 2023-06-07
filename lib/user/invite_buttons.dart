@@ -168,7 +168,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                 onPressed: () async {
                                   await firestore
                                       .collection('user')
-                                      .doc(userId())
+                                      .doc(getUserId())
                                       .update({
                                     'partnerEmail': hostEmail,
                                   });

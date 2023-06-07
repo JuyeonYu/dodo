@@ -181,7 +181,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void goRoot() async {
     Map<String, dynamic>? myUserInfoJson =
-        (await firestore.collection('user').doc(userId()).get()).data();
+        (await firestore.collection('user').doc(getUserId()).get()).data();
 
     String? nickname = myUserInfoJson?['nickname'];
     ref.read(nicknameProvider.notifier).state = nickname;
