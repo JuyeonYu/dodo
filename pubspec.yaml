@@ -50,7 +50,7 @@ dependencies:
   flutter_email_sender: ^5.2.0
   sign_in_with_apple: ^4.3.0
   flutter_local_notifications: ^14.1.1
-#  google_mobile_ads: ^3.0.0
+  google_mobile_ads: ^3.0.0
   firebase_messaging: ^14.6.2
 
 dev_dependencies:

@@ -5,10 +5,8 @@ import 'package:dodo/user/model/partner_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-// import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:share_plus/share_plus.dart';
-
 import '../common/component/text_input_dialog.dart';
 import '../common/const/colors.dart';
 import '../common/const/data.dart';
@@ -26,29 +24,34 @@ class InviteButtons extends ConsumerStatefulWidget {
 class _InviteButtonsState extends ConsumerState<InviteButtons> {
   bool inInvitated = false;
 
-  // AdManagerInterstitialAd? _interstitialAd;
+  AdManagerInterstitialAd? _interstitialAd;
 
   @override
   void initState() {
     super.initState();
-    // loadAd();
+    loadAd();
   }
 
   void loadAd() {
-    // AdManagerInterstitialAd.load(
-    //     adUnitId: defaultTargetPlatform == TargetPlatform.android
-    //         ? androidFullAdId
-    //         : 'ca-app-pub-7604048409167711/7735304920',
-    //     request: const AdManagerAdRequest(),
-    //     adLoadCallback: AdManagerInterstitialAdLoadCallback(
-    //       onAdLoaded: (ad) {
-    //         debugPrint('$ad loaded.');
-    //         _interstitialAd = ad;
-    //       },
-    //       onAdFailedToLoad: (LoadAdError error) {
-    //         debugPrint('AdManagerInterstitialAd failed to load: $error');
-    //       },
-    //     ));
+    AdManagerInterstitialAd.load(
+        adUnitId: defaultTargetPlatform == TargetPlatform.android
+            ? androidFullAdId
+            : 'ca-app-pub-7604048409167711/7735304920',
+        request: const AdManagerAdRequest(),
+        adLoadCallback: AdManagerInterstitialAdLoadCallback(
+          onAdLoaded: (ad) {
+            debugPrint('$ad loaded.');
+            _interstitialAd = ad;
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            debugPrint('AdManagerInterstitialAd failed to load: $error');
+          },
+        ));
+  }
+
+  void showAd() {
+    _interstitialAd?.show();
+    loadAd();
   }
 
   @override
@@ -67,6 +70,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                 showSetNicknameSnackBar(context);
                 return;
               }
+              showAd();
               String shareCode = generateShortHashFromUUID();
               firestore
                   .collection('invitation')
@@ -80,7 +84,6 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
               showDialog<String>(
                   context: context,
                   builder: (BuildContext context) {
-                    // _interstitialAd?.show();
                     return AlertDialog(
                         title: Text(shareCode),
                         content: const Text('위 코드를 상대방에게 공유하세요.'),
@@ -100,7 +103,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
         ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             onPressed: () async {
-              // _interstitialAd?.show();
+              showAd();
               if (FirebaseAuth.instance.currentUser?.email == null) {
                 checkLogin(context);
                 return;
@@ -162,7 +165,10 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                       });
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text('아니오', style: TextStyle(color: BACKGROUND_COLOR),),
+                                child: const Text(
+                                  '아니오',
+                                  style: TextStyle(color: BACKGROUND_COLOR),
+                                ),
                               ),
                               TextButton(
                                 onPressed: () async {
@@ -177,18 +183,21 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                       .doc(hostEmail)
                                       .update({
                                     'partnerEmail': FirebaseAuth
-                                            .instance.currentUser?.email ??
+                                        .instance.currentUser?.email ??
                                         '',
                                   });
                                   ref
                                       .read(partnerNotifierProvider.notifier)
                                       .setPartner(UserDomain(
-                                          email: hostEmail,
-                                          name: hostName,
-                                          thumbnail: ''));
+                                      email: hostEmail,
+                                      name: hostName,
+                                      thumbnail: ''));
                                   Navigator.pop(context);
                                 },
-                                child: const Text('네', style: TextStyle(color: PRIMARY_COLOR),),
+                                child: const Text(
+                                  '네',
+                                  style: TextStyle(color: PRIMARY_COLOR),
+                                ),
                               ),
                             ]);
                       });
@@ -228,7 +237,9 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                 }
               });
             },
-            child: inInvitated ? const CircularProgressIndicator() : const Text('초대받기')),
+            child: inInvitated
+                ? const CircularProgressIndicator()
+                : const Text('초대받기')),
       ],
     );
   }
