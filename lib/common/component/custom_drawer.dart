@@ -76,7 +76,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                       ],
                     ),
                     Text(
-                      FirebaseAuth.instance.currentUser?.email ?? '게스트 모드',
+                      FirebaseAuth.instance.currentUser?.email == null ? '게스트 모드' : '',
                       style: const TextStyle(color: TEXT_COLOR),
                     ),
                   ],
@@ -102,7 +102,7 @@ class _CustomDrawerState extends ConsumerState<CustomDrawer> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text('${state?.name}(${state?.email}}'),
+                          Text('${state?.name}'),
                           ElevatedButton(
                             onPressed: () {
                               showDialog<String>(
