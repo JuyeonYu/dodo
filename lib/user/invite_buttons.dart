@@ -36,7 +36,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
     AdManagerInterstitialAd.load(
         adUnitId: defaultTargetPlatform == TargetPlatform.android
             ? androidFullAdId
-            : 'ca-app-pub-7604048409167711/7735304920',
+            : iOSFullAdId,
         request: const AdManagerAdRequest(),
         adLoadCallback: AdManagerInterstitialAdLoadCallback(
           onAdLoaded: (ad) {
