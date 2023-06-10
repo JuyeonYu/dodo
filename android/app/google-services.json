@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "873377705460-8j8to1vu749l44jfn1si4ng8ido1gup6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chaechae.dodo",
+            "certificate_hash": "0ebe7742eaca996864a0de5bba4fe29c78a95144"
+          }
+        },
+        {
           "client_id": "873377705460-m9fc1vo2elgn5oiorjfhf3e97mbgq8s0.apps.googleusercontent.com",
           "client_type": 3
         }
