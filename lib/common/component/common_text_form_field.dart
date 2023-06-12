@@ -10,6 +10,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool autofocus;
   final bool showCursorColor;
   final ValueChanged<String>? onChanged;
+  final bool enabled;
   final Color? backgroundColor;
   final Color? borderColor;
   final EdgeInsets? contentPadding;
@@ -20,6 +21,7 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText = false,
     this.autofocus = false,
     this.showCursorColor = true,
+    this.enabled = true,
     this.hintText,
     this.errorText,
     this.initialValue,
@@ -42,6 +44,7 @@ class CustomTextFormField extends StatelessWidget {
       obscureText: obscureText,
       autofocus: autofocus,
       onChanged: onChanged,
+      enabled: enabled,
       decoration: InputDecoration(
           contentPadding: contentPadding ?? const EdgeInsets.all(20),
           hintText: hintText,

@@ -6,8 +6,32 @@ import '../../common/const/data.dart';
 import '../create_todo.dart';
 import '../model/todo.dart';
 
-class Helper {
-  static Widget myActions(BuildContext context, Todo todo) {
+class TodoCell extends StatefulWidget {
+  final List<DocumentSnapshot> todos;
+  final String sectionName;
+  final ValueChanged<bool> didLikeChanged;
+
+  const TodoCell(
+      {Key? key,
+      required this.sectionName,
+      required this.didLikeChanged,
+      required this.todos})
+      : super(key: key);
+
+  @override
+  State<TodoCell> createState() => _TodoCellState();
+}
+
+class _TodoCellState extends State<TodoCell> {
+  Widget actions(BuildContext context, Todo todo) {
+    if (todo.isMine) {
+      return myActions(context, todo);
+    } else {
+      return yourActions(context, todo);
+    }
+  }
+
+  Widget myActions(BuildContext context, Todo todo) {
     if (todo.isDone) {
       return Row(
         mainAxisSize: MainAxisSize.min,
@@ -71,23 +95,20 @@ class Helper {
     }
   }
 
-  static Widget yourActions(BuildContext context, Todo todo) {
-    return IconButton(onPressed: () {
-      firestore.collection('todo').doc(todo.id).update(
-          {'isDone': !todo.isDone, 'timestamp': Timestamp.now()});
-    }, icon: const Icon(Icons.thumb_up));
+  Widget yourActions(BuildContext context, Todo todo) {
+    return IconButton(
+        onPressed: () {
+          firestore
+              .collection('todo')
+              .doc(todo.id)
+              .update({'isLike': !todo.isLike});
+          todo.isLike = !todo.isLike;
+        },
+        icon: Icon(todo.isLike ? Icons.thumb_up : Icons.thumb_up_outlined));
   }
 
-  static Widget actions(BuildContext context, Todo todo) {
-    if (todo.isMine) {
-      return myActions(context, todo);
-    } else {
-      return yourActions(context, todo);
-    }
-  }
-
-  static Widget BuildSection(String sectionName, List<DocumentSnapshot> todos,
-      {bool isSearching = false}) {
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -96,7 +117,7 @@ class Helper {
           child: Row(
             children: [
               Text(
-                sectionName,
+                widget.sectionName,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -105,19 +126,17 @@ class Helper {
             ],
           ),
         ),
-        sectionName == 'Pending' && todos.isEmpty
+        widget.sectionName == 'Pending' && widget.todos.isEmpty
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(isSearching
-                    ? '검색 결과가 없습니다.'
-                    : '할 일이 없는 날입니다. 사랑한다고 말해볼까요?'),
+                child: Text('할 일이 없는 날입니다. 사랑한다고 말해볼까요?'),
               )
             : ListView.builder(
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
-                itemCount: todos.length,
+                itemCount: widget.todos.length,
                 itemBuilder: (context, index) {
-                  DocumentSnapshot doc = todos[index];
+                  DocumentSnapshot doc = widget.todos[index];
 
                   Map<String, dynamic> data =
                       doc.data() as Map<String, dynamic>;

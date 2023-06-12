@@ -110,7 +110,8 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                                       isDone: false,
                                       type: 0,
                                       timestamp: Timestamp.now(),
-                                      content: '', isLike: false,
+                                      content: '',
+                                      isLike: false,
                                     ),
                                   )),
                         );
@@ -129,8 +130,13 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
           } else {
             return ListView(
               children: [
-                Helper.BuildSection('진행중', pendingTodos),
-                Helper.BuildSection('완료됨', completedTodos),
+                TodoCell(sectionName: '진행중', todos: pendingTodos, didLikeChanged: (bool value) { setState(() {
+                  print(value);
+                  // build(context);
+                }); },),
+                TodoCell(sectionName: '완료됨', todos: completedTodos, didLikeChanged: (bool value) { setState(() {
+
+                }); },)
               ],
             );
           }

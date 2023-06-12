@@ -70,17 +70,17 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
 
     String? partnerEmail = ref.read(partnerNotifierProvider)?.email;
     // if (partnerEmail != null) {
-      var test = await (firestore
-              .collection('user')
-              .where('userEmail', isEqualTo: partnerEmail))
-          .get()
-          .then((value) {
-        Map<String, dynamic> json = value.docs.first.data();
-        String? token = json['pushToken'];
-        // if (token != null) {
-          FCMController().sendMessage(userToken: 'cFv3k3g47En-ikIH6HntFv:APA91bHsPshqW-WIGI8RJ_DQvvqwBvkmHgMsS2LOFyeqFBzkcku1fED7v0cs66kjKwNk0W7NlQCLYsp7-KopYJ_XK_g1ziJr92TIw7yzEPAj2EMIocGsOaYG0nSCnhN2nuoNak2CUWMl', title: 'test', body: 'body');
-        // }
-      });
+    //   var test = await (firestore
+    //           .collection('user')
+    //           .where('userEmail', isEqualTo: partnerEmail))
+    //       .get()
+    //       .then((value) {
+    //     Map<String, dynamic> json = value.docs.first.data();
+    //     String? token = json['pushToken'];
+    //     if (token != null) {
+    //       FCMController().sendMessage(userToken: 'cFv3k3g47En-ikIH6HntFv:APA91bHsPshqW-WIGI8RJ_DQvvqwBvkmHgMsS2LOFyeqFBzkcku1fED7v0cs66kjKwNk0W7NlQCLYsp7-KopYJ_XK_g1ziJr92TIw7yzEPAj2EMIocGsOaYG0nSCnhN2nuoNak2CUWMl', title: 'test', body: 'body');
+    //     }
+    //   });
     // }
 
     setState(() {
@@ -94,7 +94,7 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-        title: _isEditing ? '할 일 편집' : '할 일 등록',
+        title: widget.todo.isMine ? (_isEditing ? '할 일 편집' : '할 일 등록') : '할 일',
         actions: [
           TextButton(
               onPressed: () {
@@ -107,13 +107,13 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                   ? const CircularProgressIndicator(
                       color: PRIMARY_COLOR,
                     )
-                  : Text(
+                  : widget.todo.isMine ? Text(
                       _isEditing ? '수정' : '작성',
                       style: TextStyle(
                           color: widget.todo!.title.isEmpty
                               ? Colors.grey
                               : PRIMARY_COLOR),
-                    ))
+                    ) : const Spacer())
         ],
         child: Column(
           children: [
@@ -134,6 +134,7 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                             widget.todo!.title = value;
                           });
                         },
+                        enabled: widget.todo.isMine,
                         contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                         backgroundColor: Colors.transparent,
                         borderColor: Colors.transparent,
@@ -168,6 +169,7 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                               ),
                               selected: isMine,
                               onSelected: (bool selected) {
+                                if (!widget.todo.isMine) { return; }
                                 if (ref
                                         .read(partnerNotifierProvider.notifier)
                                         .state ==
@@ -191,13 +193,14 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                         height: 15,
                       ),
                       Row(
-                        children: const [
+                        children: [
                           Text(
-                            '이 일의 중요도를 선택해주세요.',
-                            style: TextStyle(
+                          widget.todo.isMine ?
+                            '이 일의 중요도를 선택해주세요.' : '중요도',
+                            style: const TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w500),
                           ),
-                          Tooltip(
+                          const Tooltip(
                             message: '중요도 순으로 할일이 자동 정렬됩니다.',
                             triggerMode: TooltipTriggerMode.tap,
                             child: Icon(Icons.info),
@@ -219,9 +222,8 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                               label: SizedBox(width: 20),
                               selected: widget.todo.type == index,
                               onSelected: (bool selected) {
+                                if (!widget.todo.isMine) { return; }
                                 setState(() {
-                                  print(selected);
-                                  print(index);
                                   widget.todo.type = index;
                                 });
                               },
@@ -244,6 +246,7 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                                   fontSize: 14, fontWeight: FontWeight.w500)),
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
+                          enabled: widget.todo.isMine,
                           onChanged: (value) {
                             setState(() {
                               widget.todo.content = value;
@@ -259,7 +262,7 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
             Row(
               children: [
                 Spacer(),
-                _isEditing
+                _isEditing && widget.todo.isMine
                     ? (_isDeleting
                         ? const Padding(
                             padding: EdgeInsets.all(8.0),
