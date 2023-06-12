@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "873377705460-lde6rjg5diol7n4dk9jd5p1q3vvhe3vc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chaechae.dodo",
+            "certificate_hash": "e9fe7fc9563e4da0ab9f05ab0906d4efc170d0c2"
+          }
+        },
+        {
           "client_id": "873377705460-m9fc1vo2elgn5oiorjfhf3e97mbgq8s0.apps.googleusercontent.com",
           "client_type": 3
         }
