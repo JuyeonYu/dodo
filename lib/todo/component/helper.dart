@@ -7,6 +7,85 @@ import '../create_todo.dart';
 import '../model/todo.dart';
 
 class Helper {
+  static Widget myActions(BuildContext context, Todo todo) {
+    if (todo.isDone) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('알림'),
+                        content: const Text('삭제할까요?\n공유한 상대방도 할 일이 삭제됩니다.'),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text(
+                                '취소',
+                                style: TextStyle(color: TEXT_COLOR),
+                              )),
+                          TextButton(
+                              onPressed: () {
+                                firestore
+                                    .collection('todo')
+                                    .doc(todo.id)
+                                    .delete();
+                                Navigator.pop(context);
+                              },
+                              child: const Text(
+                                '삭제',
+                                style: TextStyle(color: POINT_COLOR),
+                              ))
+                        ],
+                      );
+                    });
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: POINT_COLOR,
+              )),
+          Checkbox(
+            value: todo.isDone,
+            onChanged: (value) {
+              firestore.collection('todo').doc(todo.id).update(
+                  {'isDone': !todo.isDone, 'timestamp': Timestamp.now()});
+            },
+          ),
+        ],
+      );
+    } else {
+      return Checkbox(
+        value: todo.isDone,
+        onChanged: (value) {
+          firestore
+              .collection('todo')
+              .doc(todo.id)
+              .update({'isDone': !todo.isDone, 'timestamp': Timestamp.now()});
+        },
+      );
+    }
+  }
+
+  static Widget yourActions(BuildContext context, Todo todo) {
+    return IconButton(onPressed: () {
+      firestore.collection('todo').doc(todo.id).update(
+          {'isDone': !todo.isDone, 'timestamp': Timestamp.now()});
+    }, icon: const Icon(Icons.thumb_up));
+  }
+
+  static Widget actions(BuildContext context, Todo todo) {
+    if (todo.isMine) {
+      return myActions(context, todo);
+    } else {
+      return yourActions(context, todo);
+    }
+  }
+
   static Widget BuildSection(String sectionName, List<DocumentSnapshot> todos,
       {bool isSearching = false}) {
     return Column(
@@ -45,84 +124,25 @@ class Helper {
                   Todo todo = Todo.fromJson(data);
                   todo.id = doc.id;
                   return ListTile(
-                    selected: todo.isDone,
-                    selectedColor: BODY_TEXT_COLOR,
-                    selectedTileColor: Colors.white10,
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CreateTodo(
-                                    todo: todo,
-                                  )));
-                    },
-                    leading: Container(
-                        color: labelColors[todo.type],
-                        child: const SizedBox(
-                          width: 10,
-                          height: 500,
-                        )),
-                    title: Text(todo.title),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        todo.isDone
-                            ? IconButton(
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('알림'),
-                                      content: const Text(
-                                          '삭제할까요?\n공유한 상대방도 할 일이 삭제됩니다.'),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text(
-                                              '취소',
-                                              style: TextStyle(
-                                                  color: TEXT_COLOR),
-                                            )),
-                                        TextButton(
-                                            onPressed: () {
-                                              firestore
-                                                  .collection('todo')
-                                                  .doc(todo.id)
-                                                  .delete();
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text(
-                                              '삭제',
-                                              style: TextStyle(
-                                                  color: POINT_COLOR),
-                                            ))
-                                      ],
-                                    );
-                                  });
-                            },
-                            icon: const Icon(
-                              Icons.delete,
-                              color: POINT_COLOR,
-                            ))
-                            : Container(),
-                        Checkbox(
-                          value: todo.isDone,
-                          onChanged: (value) {
-                            firestore
-                                .collection('todo')
-                                .doc(todo.id)
-                                .update({
-                              'isDone': !todo.isDone,
-                              'timestamp': Timestamp.now()
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  );
+                      selected: todo.isDone,
+                      selectedColor: BODY_TEXT_COLOR,
+                      selectedTileColor: Colors.white10,
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CreateTodo(
+                                      todo: todo,
+                                    )));
+                      },
+                      leading: Container(
+                          color: labelColors[todo.type],
+                          child: const SizedBox(
+                            width: 10,
+                            height: 500,
+                          )),
+                      title: Text(todo.title),
+                      trailing: actions(context, todo));
                 },
               ),
       ],

@@ -110,7 +110,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                                       isDone: false,
                                       type: 0,
                                       timestamp: Timestamp.now(),
-                                      content: '',
+                                      content: '', isLike: false,
                                     ),
                                   )),
                         );

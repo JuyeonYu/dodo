@@ -7,6 +7,7 @@ class Todo {
   String content;
   bool isMine;
   bool isDone;
+  bool isLike;
   int type;
   Timestamp timestamp;
 
@@ -17,6 +18,7 @@ class Todo {
     required this.content,
     required this.isMine,
     required this.isDone,
+    required this.isLike,
     required this.type,
     required this.timestamp,
   });
@@ -28,6 +30,7 @@ class Todo {
       content: json['content'],
       isMine: json['isMine'],
       isDone: json['isDone'],
+      isLike: json['isDone'] ?? false,
       type: json['type'],
       timestamp: json['timestamp'],
     );

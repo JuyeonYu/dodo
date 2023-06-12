@@ -98,7 +98,7 @@ class _RootTabState extends ConsumerState<RootTab>
                                     isDone: false,
                                     type: 0,
                                     timestamp: Timestamp.now(),
-                                    content: '',
+                                    content: '', isLike: false,
                                   ),
                                 )),
                       );
