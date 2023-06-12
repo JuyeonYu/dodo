@@ -132,75 +132,114 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                   .snapshots();
               snapshots.listen((event) {
                 if (event.docs.length == 1) {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        Map<String, dynamic> json = event.docs.first.data();
-                        String hostName = json['name'];
-                        String hostEmail = json['email'];
-                        Timestamp timestamp = json['timestamp'];
-                        int diff = Timestamp.now().compareTo(timestamp);
-                        print(diff);
-                        return AlertDialog(
-                            title: const Text('알림'),
-                            content: Text('초대한 사람의 정보가 맞습니까?\n닉네임: $hostName'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                            title: Text('알림'),
-                                            content: const Text(
-                                                '해당 초대 코드에 문제가 있습니다. 코대 코드 생성을 다시 한번 부탁드립니다.'),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: const Text('닫기'),
-                                              ),
-                                            ]);
-                                      });
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text(
-                                  '아니오',
-                                  style: TextStyle(color: BACKGROUND_COLOR),
+                  Map<String, dynamic> json = event.docs.first.data();
+                  String? partnerEmail  = json['partnerEmail'];
+                  if ( partnerEmail == null || partnerEmail!.isEmpty || partnerEmail != FirebaseAuth.instance.currentUser?.email) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                              title: const Text('알림'),
+                              content: const Text(
+                                  '이미 초대 받은 사용자입니다.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('닫기'),
                                 ),
-                              ),
-                              TextButton(
-                                onPressed: () async {
-                                  await firestore
-                                      .collection('user')
-                                      .doc(getUserId())
-                                      .update({
-                                    'partnerEmail': hostEmail,
-                                  });
-                                  await firestore
-                                      .collection('user')
-                                      .doc(hostEmail)
-                                      .update({
-                                    'partnerEmail': FirebaseAuth
-                                        .instance.currentUser?.email ??
-                                        '',
-                                  });
-                                  ref
-                                      .read(partnerNotifierProvider.notifier)
-                                      .setPartner(UserDomain(
-                                      email: hostEmail,
-                                      name: hostName,
-                                      thumbnail: ''));
-                                  Navigator.pop(context);
-                                },
-                                child: const Text(
-                                  '네',
-                                  style: TextStyle(color: PRIMARY_COLOR),
+                              ]);
+                        });
+                  } else if(partnerEmail == FirebaseAuth.instance.currentUser?.email) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                              title: const Text('알림'),
+                              content: const Text(
+                                  '내가 만든 초대코드입니다.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('닫기', style: TextStyle(color: BACKGROUND_COLOR),),
                                 ),
-                              ),
-                            ]);
-                      });
+                              ]);
+                        });
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+
+                          String hostName = json['name'];
+                          String hostEmail = json['email'];
+                          Timestamp timestamp = json['timestamp'];
+                          int diff = Timestamp.now().compareTo(timestamp);
+                          print(diff);
+                          return AlertDialog(
+                              title: const Text('알림'),
+                              content: Text('초대한 사람의 정보가 맞습니까?\n닉네임: $hostName'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                              title: Text('알림'),
+                                              content: const Text(
+                                                  '해당 초대 코드에 문제가 있습니다. 코대 코드 생성을 다시 한번 부탁드립니다.'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text('닫기', style: TextStyle(color: BACKGROUND_COLOR),),
+                                                ),
+                                              ]);
+                                        });
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    '아니오',
+                                    style: TextStyle(color: BACKGROUND_COLOR),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    await firestore
+                                        .collection('user')
+                                        .doc(getUserId())
+                                        .update({
+                                      'partnerEmail': hostEmail,
+                                    });
+                                    await firestore
+                                        .collection('user')
+                                        .doc(hostEmail)
+                                        .update({
+                                      'partnerEmail': FirebaseAuth
+                                          .instance.currentUser?.email ??
+                                          '',
+                                    });
+                                    ref
+                                        .read(partnerNotifierProvider.notifier)
+                                        .setPartner(UserDomain(
+                                        email: hostEmail,
+                                        name: hostName,
+                                        thumbnail: ''));
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text(
+                                    '네',
+                                    style: TextStyle(color: PRIMARY_COLOR),
+                                  ),
+                                ),
+                              ]);
+                        });
+                  }
+
                 } else if (event.docs.length > 1) {
                   showDialog(
                       context: context,
@@ -208,13 +247,13 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                         return AlertDialog(
                             title: const Text('알림'),
                             content: const Text(
-                                '??해당 초대 코드에 문제가 있습니다. 코대 코드 생성을 다시 한번 부탁드립니다.'),
+                                '해당 초대 코드에 문제가 있습니다. 코대 코드 생성을 다시 한번 부탁드립니다.'),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text('닫기'),
+                                child: const Text('닫기', style: TextStyle(color: BACKGROUND_COLOR),),
                               ),
                             ]);
                       });
@@ -230,7 +269,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text('닫기'),
+                                child: const Text('닫기', style: TextStyle(color: BACKGROUND_COLOR),),
                               ),
                             ]);
                       });
