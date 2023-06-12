@@ -130,13 +130,8 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
           } else {
             return ListView(
               children: [
-                TodoCell(sectionName: '진행중', todos: pendingTodos, didLikeChanged: (bool value) { setState(() {
-                  print(value);
-                  // build(context);
-                }); },),
-                TodoCell(sectionName: '완료됨', todos: completedTodos, didLikeChanged: (bool value) { setState(() {
-
-                }); },)
+                TodoCell(sectionName: '진행중', todos: pendingTodos),
+                TodoCell(sectionName: '완료됨', todos: completedTodos)
               ],
             );
           }

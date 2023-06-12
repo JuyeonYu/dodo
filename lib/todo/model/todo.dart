@@ -30,7 +30,7 @@ class Todo {
       content: json['content'],
       isMine: json['isMine'],
       isDone: json['isDone'],
-      isLike: json['isDone'] ?? false,
+      isLike: json['isLike'] ?? false,
       type: json['type'],
       timestamp: json['timestamp'],
     );
@@ -44,6 +44,7 @@ class Todo {
       'content': content,
       'isMine': isMine,
       'isDone': isDone,
+      'isLike': isLike,
       'type': type,
       'timestamp': timestamp
     };

@@ -9,12 +9,10 @@ import '../model/todo.dart';
 class TodoCell extends StatefulWidget {
   final List<DocumentSnapshot> todos;
   final String sectionName;
-  final ValueChanged<bool> didLikeChanged;
 
   const TodoCell(
       {Key? key,
       required this.sectionName,
-      required this.didLikeChanged,
       required this.todos})
       : super(key: key);
 
@@ -127,8 +125,8 @@ class _TodoCellState extends State<TodoCell> {
           ),
         ),
         widget.sectionName == 'Pending' && widget.todos.isEmpty
-            ? Padding(
-                padding: const EdgeInsets.all(8.0),
+            ? const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text('할 일이 없는 날입니다. 사랑한다고 말해볼까요?'),
               )
             : ListView.builder(
