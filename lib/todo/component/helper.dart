@@ -10,10 +10,7 @@ class TodoCell extends StatefulWidget {
   final List<DocumentSnapshot> todos;
   final String sectionName;
 
-  const TodoCell(
-      {Key? key,
-      required this.sectionName,
-      required this.todos})
+  const TodoCell({Key? key, required this.sectionName, required this.todos})
       : super(key: key);
 
   @override
@@ -95,14 +92,16 @@ class _TodoCellState extends State<TodoCell> {
 
   Widget yourActions(BuildContext context, Todo todo) {
     return IconButton(
-        onPressed: () {
-          firestore
-              .collection('todo')
-              .doc(todo.id)
-              .update({'isLike': !todo.isLike});
-          todo.isLike = !todo.isLike;
-        },
-        icon: Icon(todo.isLike ? Icons.favorite : Icons.favorite_border), color: POINT_COLOR,);
+      onPressed: () {
+        firestore
+            .collection('todo')
+            .doc(todo.id)
+            .update({'isLike': !todo.isLike});
+        todo.isLike = !todo.isLike;
+      },
+      icon: Icon(todo.isLike ? Icons.favorite : Icons.favorite_border),
+      color: POINT_COLOR,
+    );
   }
 
   @override
@@ -161,10 +160,14 @@ class _TodoCellState extends State<TodoCell> {
                                 width: 10,
                                 height: 500,
                               )),
-                          todo.isMine ?
-                          SizedBox(
-                            width: 50,
-                              child: Icon(todo.isLike ? Icons.favorite : Icons.favorite_border, color: POINT_COLOR,)) : Container()
+                          todo.isMine && todo.isLike
+                              ? const SizedBox(
+                                  width: 50,
+                                  child: Icon(
+                                    Icons.favorite,
+                                    color: POINT_COLOR,
+                                  ))
+                              : Container()
                         ],
                       ),
                       title: Text(todo.title),

@@ -94,7 +94,7 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-        title:  _isEditing ? '할 일 편집' : '할 일 등록',
+        title: _isEditing ? '할 일 편집' : '할 일 등록',
         actions: [
           TextButton(
               onPressed: () {
@@ -175,7 +175,6 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                                   return;
                                 }
                                 setState(() {
-                                  widget.todo.isMine = index == 0 && selected;
                                   widget.todo.userId = ((index == 0 && selected)
                                       ? FirebaseAuth.instance.currentUser!.email
                                       : ref

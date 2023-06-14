@@ -106,7 +106,6 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
                                     todo: Todo(
                                       userId: getUserId()!,
                                       title: '',
-                                      isMine: true,
                                       isDone: false,
                                       type: 0,
                                       timestamp: Timestamp.now(),

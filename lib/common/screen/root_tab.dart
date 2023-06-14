@@ -59,26 +59,27 @@ class _RootTabState extends ConsumerState<RootTab>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              FirebaseAuth.instance.currentUser?.email == null ?
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Tooltip(
-                    message: "할 일 저장의 영구저장, 초대 기능이 제한됩니다.",
-                    triggerMode: TooltipTriggerMode.tap,
-                    child: Row(
-                      children: const [
-                        Text(
-                          '게스트 모드',
-                          style: TextStyle(color: TEXT_COLOR),
+              FirebaseAuth.instance.currentUser?.email == null
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Tooltip(
+                          message: "할 일 저장의 영구저장, 초대 기능이 제한됩니다.",
+                          triggerMode: TooltipTriggerMode.tap,
+                          child: Row(
+                            children: const [
+                              Text(
+                                '게스트 모드',
+                                style: TextStyle(color: TEXT_COLOR),
+                              ),
+                              Icon(Icons.info)
+                            ],
+                          ),
                         ),
-                        Icon(Icons.info)
-                      ],
-                    ),
-                  ),
-                ),
-              ) : const Spacer(),
+                      ),
+                    )
+                  : const Spacer(),
               const Spacer(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -94,11 +95,11 @@ class _RootTabState extends ConsumerState<RootTab>
                                             .instance.currentUser!.email!
                                         : state?.email ?? '',
                                     title: '',
-                                    isMine: index == 0,
                                     isDone: false,
                                     type: 0,
                                     timestamp: Timestamp.now(),
-                                    content: '', isLike: false,
+                                    content: '',
+                                    isLike: false,
                                   ),
                                 )),
                       );

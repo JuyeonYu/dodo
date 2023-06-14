@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Todo {
   String? id;
   String userId;
   String title;
   String content;
-  bool isMine;
   bool isDone;
   bool isLike;
   int type;
@@ -16,19 +16,19 @@ class Todo {
     required this.userId,
     required this.title,
     required this.content,
-    required this.isMine,
     required this.isDone,
     required this.isLike,
     required this.type,
     required this.timestamp,
   });
 
+  bool get isMine => userId == FirebaseAuth.instance.currentUser?.email;
+
   factory Todo.fromJson(Map<String, dynamic> json) {
     return Todo(
       userId: json['userId'],
       title: json['title'],
       content: json['content'],
-      isMine: json['isMine'],
       isDone: json['isDone'],
       isLike: json['isLike'] ?? false,
       type: json['type'],
@@ -42,7 +42,6 @@ class Todo {
       'userId': userId,
       'title': title,
       'content': content,
-      'isMine': isMine,
       'isDone': isDone,
       'isLike': isLike,
       'type': type,
