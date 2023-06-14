@@ -1,8 +1,11 @@
 import 'package:dodo/common/const/colors.dart';
 import 'package:dodo/todo/todo_screen.dart';
 import 'package:dodo/user/model/partner_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '../common/const/data.dart';
 
 class TodoTabScreen extends ConsumerStatefulWidget {
   const TodoTabScreen({Key? key}) : super(key: key);
@@ -15,6 +18,17 @@ class _TodoTabScreenState extends ConsumerState<TodoTabScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   int tabIndex = 0;
+  BannerAd banner = BannerAd(
+    listener: BannerAdListener(
+      onAdFailedToLoad: (Ad ad, LoadAdError error) {},
+      onAdLoaded: (_) {},
+    ),
+    size: AdSize.banner,
+    adUnitId: defaultTargetPlatform == TargetPlatform.android
+        ? androidBannerId
+        : iOSBannerId,
+    request: const AdRequest(),
+  )..load();
 
   @override
   void initState() {
@@ -70,15 +84,25 @@ class _TodoTabScreenState extends ConsumerState<TodoTabScreen>
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: <Widget>[
-          TodoScreen(
-            isMine: true,
+      body: Column(
+        children: [
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: <Widget>[
+                TodoScreen(
+                  isMine: true,
+                ),
+                TodoScreen(
+                  isMine: false,
+                ),
+              ],
+            ),
           ),
-          TodoScreen(
-            isMine: false,
-          ),
+          SizedBox(
+            height: 50,
+            child: AdWidget(ad: banner),
+          )
         ],
       ),
     );
