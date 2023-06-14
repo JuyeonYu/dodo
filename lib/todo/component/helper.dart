@@ -102,7 +102,7 @@ class _TodoCellState extends State<TodoCell> {
               .update({'isLike': !todo.isLike});
           todo.isLike = !todo.isLike;
         },
-        icon: Icon(todo.isLike ? Icons.thumb_up : Icons.thumb_up_outlined));
+        icon: Icon(todo.isLike ? Icons.favorite : Icons.favorite_border), color: POINT_COLOR,);
   }
 
   @override
@@ -152,12 +152,21 @@ class _TodoCellState extends State<TodoCell> {
                                       todo: todo,
                                     )));
                       },
-                      leading: Container(
-                          color: labelColors[todo.type],
-                          child: const SizedBox(
-                            width: 10,
-                            height: 500,
-                          )),
+                      leading: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                              color: labelColors[todo.type],
+                              child: const SizedBox(
+                                width: 10,
+                                height: 500,
+                              )),
+                          todo.isMine ?
+                          SizedBox(
+                            width: 50,
+                              child: Icon(todo.isLike ? Icons.favorite : Icons.favorite_border, color: POINT_COLOR,)) : Container()
+                        ],
+                      ),
                       title: Text(todo.title),
                       trailing: actions(context, todo));
                 },

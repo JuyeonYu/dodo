@@ -94,7 +94,7 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-        title: widget.todo.isMine ? (_isEditing ? '할 일 편집' : '할 일 등록') : '할 일',
+        title:  _isEditing ? '할 일 편집' : '할 일 등록',
         actions: [
           TextButton(
               onPressed: () {
@@ -107,13 +107,13 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                   ? const CircularProgressIndicator(
                       color: PRIMARY_COLOR,
                     )
-                  : widget.todo.isMine ? Text(
+                  : Text(
                       _isEditing ? '수정' : '작성',
                       style: TextStyle(
                           color: widget.todo!.title.isEmpty
                               ? Colors.grey
                               : PRIMARY_COLOR),
-                    ) : const Spacer())
+                    ))
         ],
         child: Column(
           children: [
@@ -134,7 +134,6 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                             widget.todo!.title = value;
                           });
                         },
-                        enabled: widget.todo.isMine,
                         contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                         backgroundColor: Colors.transparent,
                         borderColor: Colors.transparent,
@@ -169,7 +168,6 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                               ),
                               selected: isMine,
                               onSelected: (bool selected) {
-                                if (!widget.todo.isMine) { return; }
                                 if (ref
                                         .read(partnerNotifierProvider.notifier)
                                         .state ==
@@ -193,14 +191,13 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                         height: 15,
                       ),
                       Row(
-                        children: [
+                        children: const [
                           Text(
-                          widget.todo.isMine ?
-                            '이 일의 중요도를 선택해주세요.' : '중요도',
-                            style: const TextStyle(
+                            '이 일의 중요도를 선택해주세요.',
+                            style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w500),
                           ),
-                          const Tooltip(
+                          Tooltip(
                             message: '중요도 순으로 할일이 자동 정렬됩니다.',
                             triggerMode: TooltipTriggerMode.tap,
                             child: Icon(Icons.info),
@@ -222,7 +219,6 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                               label: SizedBox(width: 20),
                               selected: widget.todo.type == index,
                               onSelected: (bool selected) {
-                                if (!widget.todo.isMine) { return; }
                                 setState(() {
                                   widget.todo.type = index;
                                 });
@@ -246,7 +242,6 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                                   fontSize: 14, fontWeight: FontWeight.w500)),
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
-                          enabled: widget.todo.isMine,
                           onChanged: (value) {
                             setState(() {
                               widget.todo.content = value;
@@ -262,7 +257,7 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
             Row(
               children: [
                 Spacer(),
-                _isEditing && widget.todo.isMine
+                _isEditing
                     ? (_isDeleting
                         ? const Padding(
                             padding: EdgeInsets.all(8.0),
