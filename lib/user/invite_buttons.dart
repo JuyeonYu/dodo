@@ -90,7 +90,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                         actions: <Widget>[
                           TextButton(
                             onPressed: () {
-                              Share.share('두두 초대 코드: $shareCode');
+                              Share.share('두두 초대 코드: $shareCode\n안드로이드 다운로드: https://play.google.com/store/apps/details?id=com.chaechae.dodo\n아이폰 다운로드: https://apps.apple.com/kr/app/두두/id6449709551');
                             },
                             style: TextButton.styleFrom(
                                 foregroundColor: PRIMARY_COLOR),
