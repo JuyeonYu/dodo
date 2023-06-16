@@ -29,19 +29,17 @@ class _SplashViewState extends ConsumerState<SplashView> {
   }
 
   void checkToken() async {
-    var token = await FirebaseAuth.instance.currentUser?.getIdTokenResult();
-    if (FirebaseAuth.instance.currentUser == null || getUserId() == null || getUserId() == '') {
+    if (FirebaseAuth.instance.currentUser == null ||
+        getUserId() == null ||
+        getUserId() == '') {
       await Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const LoginScreen()),
         (route) => false,
       );
       return;
     }
-    Map<String, dynamic>? myUserInfoJson = (await firestore
-            .collection('user')
-            .doc(getUserId())
-            .get())
-        .data();
+    Map<String, dynamic>? myUserInfoJson =
+        (await firestore.collection('user').doc(getUserId()).get()).data();
 
     String? nickname = myUserInfoJson?['nickname'];
     if (nickname == null || nickname!.isEmpty) {
@@ -72,6 +70,11 @@ class _SplashViewState extends ConsumerState<SplashView> {
               name: yourUserInfoJson?['nickname'] ?? '',
               thumbnail: '');
         }
+        var token = await FirebaseAuth.instance.currentUser?.getIdTokenResult();
+        firestore
+            .collection('user')
+            .doc(FirebaseAuth.instance.currentUser?.email)
+            .update({'pushToken': token?.token ?? ''});
         goRoot();
       }
     });
