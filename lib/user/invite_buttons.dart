@@ -134,7 +134,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                 if (event.docs.length == 1) {
                   Map<String, dynamic> json = event.docs.first.data();
                   String? partnerEmail  = json['partnerEmail'];
-                  if ( partnerEmail == null || partnerEmail!.isEmpty || partnerEmail != FirebaseAuth.instance.currentUser?.email) {
+                  if (partnerEmail!.isEmpty || partnerEmail != FirebaseAuth.instance.currentUser?.email) {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
