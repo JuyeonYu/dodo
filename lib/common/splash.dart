@@ -5,6 +5,7 @@ import 'package:dodo/user/model/nickname_provider.dart';
 import 'package:dodo/user/model/partner_provider.dart';
 import 'package:dodo/user/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../user/login_screen.dart';
@@ -70,11 +71,11 @@ class _SplashViewState extends ConsumerState<SplashView> {
               name: yourUserInfoJson?['nickname'] ?? '',
               thumbnail: '');
         }
-        var token = await FirebaseAuth.instance.currentUser?.getIdTokenResult();
+        var token = await FirebaseMessaging.instance.getToken();
         firestore
             .collection('user')
             .doc(FirebaseAuth.instance.currentUser?.email)
-            .update({'pushToken': token?.token ?? ''});
+            .update({'pushToken': token ?? ''});
         goRoot();
       }
     });

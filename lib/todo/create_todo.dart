@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dodo/user/model/partner_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,15 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
     _isEditing = widget.todo.title.isNotEmpty;
   }
 
+  void _sendNoti() async {
+    var functions = FirebaseFunctions.instance;
+    // functions.useFunctionsEmulator('localhost', 5001);
+    final result =
+        await FirebaseFunctions.instance.httpsCallable('sendNoti').call(
+      {'email': FirebaseAuth.instance.currentUser?.email ?? ''},
+    );
+  }
+
   Future<void> _saveTodo() async {
     setState(() {
       _isSaving = true;
@@ -54,7 +64,6 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
           },
         ),
       ));
-      // Navigator.pop(context);
       return;
     }
 
@@ -66,22 +75,9 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
     } else {
       firestore.collection('todo').doc().set(widget.todo.toJson());
     }
-
-    String? partnerEmail = ref.read(partnerNotifierProvider)?.email;
-    // if (partnerEmail != null) {
-    //   var test = await (firestore
-    //           .collection('user')
-    //           .where('userEmail', isEqualTo: partnerEmail))
-    //       .get()
-    //       .then((value) {
-    //     Map<String, dynamic> json = value.docs.first.data();
-    //     String? token = json['pushToken'];
-    //     if (token != null) {
-    //       FCMController().sendMessage(userToken: 'cFv3k3g47En-ikIH6HntFv:APA91bHsPshqW-WIGI8RJ_DQvvqwBvkmHgMsS2LOFyeqFBzkcku1fED7v0cs66kjKwNk0W7NlQCLYsp7-KopYJ_XK_g1ziJr92TIw7yzEPAj2EMIocGsOaYG0nSCnhN2nuoNak2CUWMl', title: 'test', body: 'body');
-    //     }
-    //   });
-    // }
-
+    if (widget.todo.userId != FirebaseAuth.instance.currentUser?.email) {
+      _sendNoti();
+    }
     setState(() {
       _isSaving = false;
     });
