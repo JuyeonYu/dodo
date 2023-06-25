@@ -103,6 +103,9 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
         ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             onPressed: () async {
+              if (ref.read(partnerNotifierProvider.notifier).state != null) {
+                return;
+              }
               showAd();
               if (FirebaseAuth.instance.currentUser?.email == null) {
                 checkLogin(context);
@@ -133,25 +136,8 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
               snapshots.listen((event) {
                 if (event.docs.length == 1) {
                   Map<String, dynamic> json = event.docs.first.data();
-                  String? partnerEmail  = json['partnerEmail'];
-                  if (partnerEmail!.isEmpty || partnerEmail != FirebaseAuth.instance.currentUser?.email) {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                              title: const Text('알림'),
-                              content: const Text(
-                                  '이미 초대 받은 사용자입니다.'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('닫기'),
-                                ),
-                              ]);
-                        });
-                  } else if(partnerEmail == FirebaseAuth.instance.currentUser?.email) {
+                  String? partnerEmail = event.docs.first.id;
+                    if(partnerEmail == FirebaseAuth.instance.currentUser?.email) {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -174,10 +160,7 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                         builder: (BuildContext context) {
 
                           String hostName = json['name'];
-                          String hostEmail = json['email'];
-                          Timestamp timestamp = json['timestamp'];
-                          int diff = Timestamp.now().compareTo(timestamp);
-                          print(diff);
+
                           return AlertDialog(
                               title: const Text('알림'),
                               content: Text('초대한 사람의 정보가 맞습니까?\n닉네임: $hostName'),
@@ -213,23 +196,29 @@ class _InviteButtonsState extends ConsumerState<InviteButtons> {
                                         .collection('user')
                                         .doc(getUserId())
                                         .update({
-                                      'partnerEmail': hostEmail,
+                                      'partnerEmail': partnerEmail,
                                     });
                                     await firestore
                                         .collection('user')
-                                        .doc(hostEmail)
+                                        .doc(partnerEmail)
                                         .update({
                                       'partnerEmail': FirebaseAuth
                                           .instance.currentUser?.email ??
                                           '',
                                     });
+                                    await firestore
+                                    .collection('invitation')
+                                    .doc(partnerEmail)
+                                    .delete();
                                     ref
                                         .read(partnerNotifierProvider.notifier)
                                         .setPartner(UserDomain(
-                                        email: hostEmail,
+                                        email: partnerEmail,
                                         name: hostName,
                                         thumbnail: ''));
                                     Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    // Navigator.pop(context);
                                   },
                                   child: const Text(
                                     '네',
