@@ -10,7 +10,7 @@ class Todo {
   bool isLike;
   int type;
   Timestamp timestamp;
-
+  Timestamp? expiration;
   Todo({
     this.id,
     required this.userId,
@@ -20,6 +20,7 @@ class Todo {
     required this.isLike,
     required this.type,
     required this.timestamp,
+    this.expiration,
   });
 
   bool get isMine => userId == FirebaseAuth.instance.currentUser?.email;
@@ -33,6 +34,7 @@ class Todo {
       isLike: json['isLike'] ?? false,
       type: json['type'],
       timestamp: json['timestamp'],
+      expiration: json['expiration'],
     );
   }
 
@@ -45,7 +47,8 @@ class Todo {
       'isDone': isDone,
       'isLike': isLike,
       'type': type,
-      'timestamp': timestamp
+      'timestamp': timestamp,
+      'expiration': expiration,
     };
   }
 }

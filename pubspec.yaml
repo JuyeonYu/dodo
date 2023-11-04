@@ -53,6 +53,8 @@ dependencies:
   google_mobile_ads: ^3.0.0
   firebase_messaging: ^14.6.2
   cloud_functions: ^4.3.3
+  intl: ^0.18.1
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

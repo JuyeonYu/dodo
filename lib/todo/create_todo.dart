@@ -1,14 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dodo/user/model/partner_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../common/component/common_text_form_field.dart';
 import '../common/const/colors.dart';
 import '../common/const/data.dart';
 import '../common/default_layout.dart';
 import 'model/todo.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class CreateTodo extends ConsumerStatefulWidget {
   final Todo todo;
@@ -23,6 +26,9 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
   late bool _isEditing;
   bool _isSaving = false;
   bool _isDeleting = false;
+  DateTime? date;
+  // DateFormat dateFormat = DateFormat('yyyy. MM. dd');
+
   late final TextEditingController _memoController =
       TextEditingController(text: widget.todo.content);
 
@@ -224,10 +230,58 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
                       const SizedBox(
                         height: 15,
                       ),
+                      const Text('날짜'),
+                      Row(
+                        children: [
+                          TextButton(
+                            onPressed: () async {
+                              final selectedDate = await showDatePicker(
+                                context: context,
+                                initialDate: date ?? DateTime.now(),
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(3000),
+                              );
+                              if (selectedDate != null) {
+                                setState(() {
+                                  widget.todo.expiration =
+                                      Timestamp.fromMicrosecondsSinceEpoch(
+                                          selectedDate.millisecondsSinceEpoch * 1000);
+                                });
+                              }
+                            },
+                            style: ButtonStyle(
+                                alignment: Alignment.centerLeft,
+                                foregroundColor: MaterialStatePropertyAll(
+                                    widget.todo.expiration == null
+                                        ? BODY_TEXT_COLOR
+                                        : PRIMARY_COLOR)),
+                            child: Text(
+                              widget.todo.expiration == null
+                                  ? '선택'
+                                  : expirationDateFormat.format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          widget.todo.expiration!.millisecondsSinceEpoch)),
+                            ),
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  widget.todo.expiration = null;
+                                  date = null;
+                                });
+                              },
+                              child: Visibility(
+                                  visible: widget.todo.expiration != null,
+                                  child: const Text('초기화', style: TextStyle(color: BODY_TEXT_COLOR),)))
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: TextField(
-                          maxLength: 60,
+                          maxLength: 160,
                           controller: _memoController,
                           decoration: const InputDecoration(
                               border: InputBorder.none,
