@@ -82,7 +82,8 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
               }
             } else {
               // 1차 정렬: 날짜 오름차순
-              int typeComparison = (aTodo.expiration ?? Timestamp(0, 0)).compareTo((bTodo.expiration ?? Timestamp(0, 0)));
+
+            int typeComparison = (aTodo.expiration ?? Timestamp(0, 0)).compareTo((bTodo.expiration ?? Timestamp(0, 0)));
               if (typeComparison != 0) {
                 return typeComparison;
               }
