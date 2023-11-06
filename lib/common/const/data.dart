@@ -21,4 +21,4 @@ const androidBannerId = 'ca-app-pub-7604048409167711/8529511847';
 const iOSBannerId = 'ca-app-pub-7604048409167711/5871558919';
 
 List<Color> labelColors = [Colors.grey, PRIMARY_COLOR, Colors.redAccent];
-DateFormat expirationDateFormat = DateFormat('yyyy. MM. dd(E)');
+DateFormat expirationDateFormat = DateFormat('yyyy. MM. dd(E)', 'ko_KR');
