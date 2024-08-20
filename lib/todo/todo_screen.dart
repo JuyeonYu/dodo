@@ -21,7 +21,6 @@ class TodoScreen extends ConsumerStatefulWidget {
 }
 
 class _TodoScreenState extends ConsumerState<TodoScreen> {
-
   @override
   Widget build(BuildContext context) {
     final order = ref.watch(currentOrderProvider);
@@ -73,7 +72,6 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
             Todo aTodo = Todo.fromJson(a.data() as Map<String, dynamic>);
             Todo bTodo = Todo.fromJson(b.data() as Map<String, dynamic>);
 
-
             if (order == MenuType.priority) {
               // 1차 정렬: type 오름차순
               int typeComparison = bTodo.type.compareTo(aTodo.type);
@@ -83,12 +81,21 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
             } else {
               // 1차 정렬: 날짜 오름차순
 
-            int typeComparison = (aTodo.expiration ?? Timestamp(0, 0)).compareTo((bTodo.expiration ?? Timestamp(0, 0)));
+              int typeComparison;
+              if (aTodo.expiration == null && bTodo.expiration == null) {
+                typeComparison = 0; // 둘 다 null인 경우 동일한 우선순위
+              } else if (aTodo.expiration == null) {
+                typeComparison = 1; // aTodo가 null이면 bTodo가 우선
+              } else if (bTodo.expiration == null) {
+                typeComparison = -1; // bTodo가 null이면 aTodo가 우선
+              } else {
+                typeComparison = aTodo.expiration!.compareTo(bTodo.expiration!);
+              }
+
               if (typeComparison != 0) {
                 return typeComparison;
               }
             }
-
 
             // 2차 정렬: timestamp 오름차순
             return bTodo.timestamp.compareTo(aTodo.timestamp);

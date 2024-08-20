@@ -12,7 +12,6 @@ import 'firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // await setupFlutterNotifications(); // firebase 세팅 아래에 설명
@@ -28,7 +27,8 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 AndroidNotificationChannel channel = const AndroidNotificationChannel(
   'high_importance_channel', // id
   'High Importance Notifications', // name
-  description: 'This channel is used for important notifications.', // description
+  description:
+      'This channel is used for important notifications.', // description
   importance: Importance.high,
 );
 
@@ -42,13 +42,13 @@ Future<void> setupFlutterNotifications() async {
     'high_importance_channel', // id는 AndroidManifest.xml 파일에서 설정한 default_notification_channel_id 값과 같아야한다
     'High Importance Notifications', // title
     description:
-    'This channel is used for important notifications.', // description
+        'This channel is used for important notifications.', // description
     importance: Importance.high,
   );
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
   // iOS foreground notification 권한
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
@@ -71,6 +71,7 @@ Future<void> setupFlutterNotifications() async {
   // 셋팅flag 설정
   isFlutterLocalNotificationsInitialized = true;
 }
+
 Future<void> getToken() async {
   String? token;
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -107,7 +108,6 @@ void showFlutterNotification(RemoteMessage message) {
   }
 }
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -123,7 +123,7 @@ void main() async {
   // );
 
   var initialzationSettingsAndroid =
-  AndroidInitializationSettings('@mipmap/ic_launcher');
+      AndroidInitializationSettings('@mipmap/ic_launcher');
 
   var initialzationSettingsIOS = const DarwinInitializationSettings(
     requestSoundPermission: true,
@@ -135,7 +135,7 @@ void main() async {
 
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
   var initializationSettings = InitializationSettings(
@@ -162,7 +162,6 @@ class MyApp extends StatefulWidget {
 
   @override
   State<MyApp> createState() => _MyAppState();
-
 }
 
 class _MyAppState extends State<MyApp> {
@@ -178,7 +177,7 @@ class _MyAppState extends State<MyApp> {
       );
       var iOSNotiDetails = const DarwinNotificationDetails();
       var details =
-      NotificationDetails(android: androidNotiDetails, iOS: iOSNotiDetails);
+          NotificationDetails(android: androidNotiDetails, iOS: iOSNotiDetails);
       if (notification != null) {
         flutterLocalNotificationsPlugin.show(
           notification.hashCode,
@@ -194,6 +193,7 @@ class _MyAppState extends State<MyApp> {
     });
     super.initState();
   }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
